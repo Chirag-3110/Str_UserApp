@@ -46,7 +46,7 @@ const DATA = [
         Price: "200/-"
     },
 ]
-const ProductDetials = () => {
+const ProductDetials = ({navigation}) => {
     const [counter, setcounter] = useState(1);
     const Increment = () => {
         setcounter(counter + 1)
@@ -93,7 +93,7 @@ const ProductDetials = () => {
                     <Text style={styles.TotalPriceText}>Total Price :900</Text>
                 </View>
                 <TouchableOpacity style={styles.PayNowBtn}>
-                    <Text style={styles.PayNowBtnText}>Pay now</Text>
+                    <Text style={styles.PayNowBtnText} onPress={()=>{navigation.navigate("ProductForm")}}>Pay now</Text>
                 </TouchableOpacity>
             </View>
         </View>
