@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Dimensions, Alert, Pressable, Modal, TextInput, TouchableOpacity, RefreshControl, Image, ImageBackground, ImageComponent, ScrollView } from 'react-native';
 const windoWidth = Dimensions.get('window').width;
 const windoHeight = Dimensions.get('window').height;
