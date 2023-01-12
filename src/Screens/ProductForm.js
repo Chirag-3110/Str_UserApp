@@ -5,7 +5,7 @@ import {
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-const ProductForm = () => {
+const ProductForm = ({ navigation }) => {
 
     return (
         <View style={styles.body}>
@@ -55,7 +55,7 @@ const ProductForm = () => {
 
             </View>
 
-            <TouchableOpacity style={styles.submitbtn}>
+            <TouchableOpacity style={styles.submitbtn} onPress={() => { navigation.navigate("OrderConfirm") }}>
                 <Text style={styles.submittext}>Pay Now</Text>
             </TouchableOpacity>
         </View>

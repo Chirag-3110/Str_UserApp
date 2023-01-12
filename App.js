@@ -7,6 +7,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Home from './src/Screens/Home';
 import ProductDetials from './src/Screens/ProductDetails';
 import ProductForm from './src/Screens/ProductForm';
+import OrderConfirm from './src/Screens/OrderConfirm';
+import Splash from './src/Screens/Splash';
 
 
 const Stack = createNativeStackNavigator();
@@ -15,9 +17,11 @@ function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="Splash" component={Splash} />
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="ProductDetials" component={ProductDetials} />
         <Stack.Screen name="ProductForm" component={ProductForm} />
+        <Stack.Screen name="OrderConfirm" component={OrderConfirm} />
       </Stack.Navigator>
     </NavigationContainer>
   );
