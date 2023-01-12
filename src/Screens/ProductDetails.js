@@ -46,13 +46,32 @@ const DATA = [
         Price: "200/-"
     },
 ]
-const ProductDetials = ({navigation}) => {
+const TotalPrice = 0;
+const ProductDetials = ({ route, navigation }) => {
+    const { selectedOrderArray } = route.params;
+    let TP = 0;
+    let mainPrice
+    useEffect(() => {
+        CalCuTotalPrice();
+
+    }, [])
     const [counter, setcounter] = useState(1);
+    const [TotalPriceFinal, setTotalPriceFinal] = useState(0)
     const Increment = () => {
         setcounter(counter + 1)
     }
     const Decrement = () => {
         setcounter(counter - 1)
+    }
+    const CalCuTotalPrice = () => {
+        for (i = 0; i < selectedOrderArray.length; i++) {
+            IntegerAmount = parseInt(selectedOrderArray[i].price)
+            console.log("IntAMourt", IntegerAmount)
+            TP = TP + IntegerAmount
+        }
+        console.log("total proce is", TP)
+        const lastAmount = TP
+        setTotalPriceFinal(lastAmount)
     }
 
     return (
@@ -62,13 +81,13 @@ const ProductDetials = ({navigation}) => {
             </View>
             <ScrollView style={styles.MiddleView}>
                 {
-                    DATA.map((item, index) => (
+                    selectedOrderArray.map((item, index) => (
                         <>
                             <View style={styles.ProInfoBox}>
-                                <Image source={{ uri: item.Image }} style={styles.ProImage} />
+                                <Image source={{ uri: item.image }} style={styles.ProImage} />
                                 <View style={styles.ProductDescPrice}>
-                                    <Text style={styles.DescText}>{item.Desc}</Text>
-                                    <Text style={styles.PriceText}>Price : {item.Price}</Text>
+                                    <Text style={styles.DescText}>{item.name}</Text>
+                                    <Text style={styles.PriceText}>Price : {item.price}</Text>
                                 </View>
                                 <View style={styles.QuantityView}>
                                     <View style={styles.MainPSView}>
@@ -90,10 +109,11 @@ const ProductDetials = ({navigation}) => {
             </ScrollView>
             <View style={styles.BottomView}>
                 <View>
-                    <Text style={styles.TotalPriceText}>Total Price :900</Text>
+                    <Text style={styles.TotalPriceText}>Total Price :{TotalPriceFinal}</Text>
                 </View>
-                <TouchableOpacity style={styles.PayNowBtn}>
-                    <Text style={styles.PayNowBtnText} onPress={()=>{navigation.navigate("ProductForm")}}>Pay now</Text>
+                <TouchableOpacity style={styles.PayNowBtn} onPress={() => { navigation.navigate("ProductForm") }}>
+                    <Text style={styles.PayNowBtnText}
+                    >Add Instruction</Text>
                 </TouchableOpacity>
             </View>
         </View>
