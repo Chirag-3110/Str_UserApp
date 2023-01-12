@@ -1,56 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Dimensions, Alert, Pressable, Modal, TextInput, TouchableOpacity, RefreshControl, Image, ImageBackground, ImageComponent, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, TouchableOpacity, Image, ScrollView } from 'react-native';
 const windoWidth = Dimensions.get('window').width;
 const windoHeight = Dimensions.get('window').height;
-const DATA = [
-    {
-        id: 1,
-        Image: "https://t3.ftcdn.net/jpg/03/98/52/84/360_F_398528484_ra3Tom42wvihhQfbCXtMqVORILZeUZ5B.jpg",
-        Desc: "Veg Momos",
-        Price: "200/-"
-    },
-    {
-        id: 2,
-        Image: "https://thumbs.dreamstime.com/b/veg-fried-momo-topped-cheese-sauce-served-over-rustic-wooden-background-selective-focus-224001969.jpg",
-        Desc: "Cheese Veg Momos",
-        Price: "200/-"
-    },
-    {
-        id: 3,
-        Image: "https://images.herzindagi.info/image/2019/Mar/cheese-corn-momos-main.jpg",
-        Desc: "non-Veg Momo",
-        Price: "200/-"
-    },
-    {
-        id: 4,
-        Image: "https://foodsfactory.co.in/Fastfood/upload/images/6640-2022-08-27.JPG",
-        Desc: "CheesyVegMomo",
-        Price: "200/-"
-    },
-    {
-        id: 4,
-        Image: "https://foodsfactory.co.in/Fastfood/upload/images/6640-2022-08-27.JPG",
-        Desc: "CheesyVegMomo",
-        Price: "200/-"
-    },
-    {
-        id: 4,
-        Image: "https://foodsfactory.co.in/Fastfood/upload/images/6640-2022-08-27.JPG",
-        Desc: "CheesyVegMomo",
-        Price: "200/-"
-    },
-    {
-        id: 4,
-        Image: "https://foodsfactory.co.in/Fastfood/upload/images/6640-2022-08-27.JPG",
-        Desc: "CheesyVegMomo",
-        Price: "200/-"
-    },
-]
-const TotalPrice = 0;
 const ProductDetials = ({ route, navigation }) => {
     const { selectedOrderArray } = route.params;
     let TP = 0;
-    let mainPrice
     useEffect(() => {
         CalCuTotalPrice();
 
