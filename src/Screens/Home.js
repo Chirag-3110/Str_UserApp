@@ -42,7 +42,7 @@ const Home = ({ navigation }) => {
         setSearchedArray(items)
     }, [])
     return (
-        <ScrollView style={styles.container}>
+        <View style={styles.container}>
             <Text style={{ color: "#137EFF", fontWeight: "600", padding: 15, fontSize: 25, backgroundColor: "white", borderBottomRightRadius: 20, borderBottomLeftRadius: 20, elevation: 10 }}>Welcome ! User</Text>
             <View style={styles.inputContainer}>
                 <FontAwesome name='search' color={'#6BB5FF'} size={22} />
@@ -51,39 +51,41 @@ const Home = ({ navigation }) => {
             <Text style={{ color: "#137EFF", fontWeight: "bold", textAlign: "left", fontSize: 25, paddingHorizontal: 10 }}>
                 All Orders
             </Text>
-            <View style={{ flexWrap: "wrap", flexDirection: "row", alignSelf: "center", width, justifyContent: 'center', }}>
-                {
-                    searchedArray.map((val) => (
-                        <View style={styles.itemContainer} key={val.id}>
-                            <Image
-                                source={{ uri: val.image }}
-                                style={{ width: '95%', height: 80, resizeMode: "contain", borderRadius: 10 }}
-                            />
-                            <View style={{ width: '95%', paddingVertical: 10 }}>
-                                <Text style={{ color: "#137EFF", fontWeight: "bold", textAlign: "left", fontSize: 13 }}>
-                                    {val.name}
-                                </Text>
-                                <View style={{ flexDirection: "row", justifyContent: "space-around", margin: 10 }}>
-                                    <Text style={{ color: "#137EFF", fontWeight: "500", textAlign: "left", fontSize: 12 }}>
-                                        {val.quantity}
+            <ScrollView>
+                <View style={{ flexWrap: "wrap", flexDirection: "row", alignSelf: "center", width, justifyContent: 'center', }}>
+                    {
+                        searchedArray.map((val) => (
+                            <View style={styles.itemContainer} key={val.id}>
+                                <Image
+                                    source={{ uri: val.image }}
+                                    style={{ width: '95%', height: 80, resizeMode: "contain", borderRadius: 10 }}
+                                />
+                                <View style={{ width: '95%', paddingVertical: 10 }}>
+                                    <Text style={{ color: "#137EFF", fontWeight: "bold", textAlign: "left", fontSize: 13 }}>
+                                        {val.name}
                                     </Text>
-                                    <Text style={{ color: "#137EFF", fontWeight: "500", textAlign: "left", fontSize: 12 }}>
-                                        for
-                                    </Text>
-                                    <Text style={{ color: "#137EFF", fontWeight: "500", textAlign: "left", fontSize: 12 }}>
-                                        {val.price}
-                                    </Text>
+                                    <View style={{ flexDirection: "row", justifyContent: "space-around", margin: 10 }}>
+                                        <Text style={{ color: "#137EFF", fontWeight: "500", textAlign: "left", fontSize: 12 }}>
+                                            {val.quantity}
+                                        </Text>
+                                        <Text style={{ color: "#137EFF", fontWeight: "500", textAlign: "left", fontSize: 12 }}>
+                                            for
+                                        </Text>
+                                        <Text style={{ color: "#137EFF", fontWeight: "500", textAlign: "left", fontSize: 12 }}>
+                                            {val.price}
+                                        </Text>
+                                    </View>
                                 </View>
+                                <TouchableOpacity style={styles.buttonBody}
+                                    onPress={() => addedItems(val)}
+                                >
+                                    <Text style={{ color: "black", fontSize: 15, fontWeight: "700", color: "#28CDA9" }}>Add</Text>
+                                </TouchableOpacity>
                             </View>
-                            <TouchableOpacity style={styles.buttonBody}
-                                onPress={() => addedItems(val)}
-                            >
-                                <Text style={{ color: "black", fontSize: 15, fontWeight: "700", color: "#28CDA9" }}>Add</Text>
-                            </TouchableOpacity>
-                        </View>
-                    ))
-                }
-            </View>
+                        ))
+                    }
+                </View>
+            </ScrollView>
             {
                 selectedOrder.length === 0 ? null :
                     <TouchableOpacity style={styles.cartButton}
@@ -92,7 +94,7 @@ const Home = ({ navigation }) => {
                         <Text style={{ color: "white", fontWeight: "600", fontSize: 15 }}>Proceed to cart : {numberOfItems}</Text>
                     </TouchableOpacity>
             }
-        </ScrollView>
+        </View>
     )
 }
 const styles = StyleSheet.create({
