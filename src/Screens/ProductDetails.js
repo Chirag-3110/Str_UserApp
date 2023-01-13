@@ -4,8 +4,10 @@ const windoWidth = Dimensions.get('window').width;
 const windoHeight = Dimensions.get('window').height;
 const ProductDetials = ({ route, navigation }) => {
     const { selectedOrderArray } = route.params;
+    const [finalArray, setfinalArray] = useState([])
     let TP = 0;
     useEffect(() => {
+        finalArray.push(...selectedOrderArray)
         CalCuTotalPrice();
 
     }, [])
@@ -18,16 +20,27 @@ const ProductDetials = ({ route, navigation }) => {
         setcounter(counter - 1)
     }
     const CalCuTotalPrice = () => {
-        for (i = 0; i < selectedOrderArray.length; i++) {
-            IntegerAmount = parseInt(selectedOrderArray[i].price)
+        console.log("i am called in calc")
+        for (i = 0; i < finalArray.length; i++) {
+            IntegerAmount = parseInt(finalArray[i].price)
             console.log("IntAMourt", IntegerAmount)
             TP = TP + IntegerAmount
         }
-        console.log("total proce is", TP)
         const lastAmount = TP
         setTotalPriceFinal(lastAmount)
     }
-
+    const DeleteItem = (id) => {
+        const newArr = finalArray.filter((obj) => obj.id !== id);
+        // console.log("i am hello", newArr)
+        setfinalArray(newArr)
+        for (i = 0; i < newArr.length; i++) {
+            IntegerAmount = parseInt(newArr[i].price)
+            console.log("IntAMourt", IntegerAmount)
+            TP = TP + IntegerAmount
+        }
+        const lastAmount = TP
+        setTotalPriceFinal(lastAmount)
+    }
     return (
         <View style={styles.MainView}>
             <View style={styles.TopView}>
@@ -35,7 +48,7 @@ const ProductDetials = ({ route, navigation }) => {
             </View>
             <ScrollView style={styles.MiddleView}>
                 {
-                    selectedOrderArray.map((item, index) => (
+                    finalArray.map((item, index) => (
                         <>
                             <View style={styles.ProInfoBox}>
                                 <Image source={{ uri: item.image }} style={styles.ProImage} />
@@ -44,8 +57,8 @@ const ProductDetials = ({ route, navigation }) => {
                                     <Text style={styles.PriceText}>Price : {item.price}</Text>
                                 </View>
                                 <View style={styles.QuantityView}>
-                                    <View style={styles.MainPSView}>
-                                        <TouchableOpacity style={{ justifyContent: "center" }} onPress={Decrement}>
+                                    <View style={[styles.MainPSView, { justifyContent: "center", alignItems: "center", backgroundColor: "#28CDA9" }]}>
+                                        {/* <TouchableOpacity style={{ justifyContent: "center" }} onPress={Decrement}>
                                             <Image source={{ uri: "https://cdn-icons-png.flaticon.com/128/9146/9146915.png" }} style={styles.IconPlus} />
                                         </TouchableOpacity>
                                         <View>
@@ -53,6 +66,9 @@ const ProductDetials = ({ route, navigation }) => {
                                         </View>
                                         <TouchableOpacity style={{ justifyContent: "center" }} onPress={Increment}>
                                             <Image source={{ uri: "https://cdn-icons-png.flaticon.com/128/9312/9312231.png" }} style={styles.IconPlus} />
+                                        </TouchableOpacity> */}
+                                        <TouchableOpacity onPress={() => { DeleteItem(item.id) }}>
+                                            <Text style={{ textAlign: "center", color: "white" }}>Delete</Text>
                                         </TouchableOpacity>
                                     </View>
                                 </View>
@@ -70,7 +86,7 @@ const ProductDetials = ({ route, navigation }) => {
                     >Add Instruction</Text>
                 </TouchableOpacity>
             </View>
-        </View>
+        </View >
     )
 }
 const styles = StyleSheet.create({
