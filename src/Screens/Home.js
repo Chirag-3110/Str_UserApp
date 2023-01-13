@@ -10,7 +10,6 @@ import {
     Image,
     TouchableOpacity
 } from 'react-native';
-import Lottie from 'lottie-react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import items from '../AppData/ItemData';
 const { width, height } = Dimensions.get('window');
@@ -33,14 +32,27 @@ const Home = ({ navigation }) => {
             setSearchedArray(items);
         }
     };
-    const addedItems = (item) => {
+    const addedItems = (item,index) => {
+        setSearchedArray((item)=>{
+            console.log(item[index].isSelect);
+            item[index].addedQuantity=item[index].addedQuantity+1;
+            item[index].isSelect=true;
+            return item
+        })
         setSelectedOrder([...selectedOrder, item]);
         numberOfItems++;
         setNumberOfItems(numberOfItems);
     }
     useEffect(() => {
-        setSearchedArray(items)
+        modifyItemsArray()
     }, [])
+    const modifyItemsArray=()=>{
+        let newModifiedArray=[]
+        items.forEach((item)=>{
+            newModifiedArray.push({...item,isSelect:false,addedQuantity:0})
+        })
+        setSearchedArray(newModifiedArray);
+    }
     return (
         <View style={styles.container}>
             <Text style={{ color: "#137EFF", fontWeight: "600", padding: 15, fontSize: 25, backgroundColor: "white", borderBottomRightRadius: 20, borderBottomLeftRadius: 20, elevation: 10 }}>Welcome ! User</Text>
@@ -54,7 +66,8 @@ const Home = ({ navigation }) => {
             <ScrollView>
                 <View style={{ flexWrap: "wrap", flexDirection: "row", alignSelf: "center", width, justifyContent: 'center', }}>
                     {
-                        searchedArray.map((val) => (
+                        searchedArray.length===0?null:
+                        searchedArray.map((val,index) => (
                             <View style={styles.itemContainer} key={val.id}>
                                 <Image
                                     source={{ uri: val.image }}
@@ -76,10 +89,10 @@ const Home = ({ navigation }) => {
                                         </Text>
                                     </View>
                                 </View>
-                                <TouchableOpacity style={styles.buttonBody}
-                                    onPress={() => addedItems(val)}
+                                <TouchableOpacity style={[styles.buttonBody,val.isSelect?{borderColor: "red"}:{borderColor: "#28CDA9"}]}
+                                    onPress={() => addedItems(val,index)}
                                 >
-                                    <Text style={{ color: "black", fontSize: 15, fontWeight: "700", color: "#28CDA9" }}>Add</Text>
+                                    <Text style={[{ fontSize: 15, fontWeight: "700", },val.isSelect?{ color: "red"}:{ color: "#28CDA9"}]}>Add {val.addedQuantity}</Text>
                                 </TouchableOpacity>
                             </View>
                         ))
@@ -128,7 +141,6 @@ const styles = StyleSheet.create({
         height: 35,
         backgroundColor: "transparent",
         borderWidth: 2,
-        borderColor: "#28CDA9",
         alignItems: 'center',
         justifyContent: "center",
         borderRadius: 5
