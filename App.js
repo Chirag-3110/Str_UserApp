@@ -9,11 +9,25 @@ import ProductDetials from './src/Screens/ProductDetails';
 import ProductForm from './src/Screens/ProductForm';
 import OrderConfirm from './src/Screens/OrderConfirm';
 import Splash from './src/Screens/Splash';
-
+import messaging from '@react-native-firebase/messaging';
 
 const Stack = createNativeStackNavigator();
 
 function App() {
+
+  React.useEffect(()=>{
+    getNotificationPermission()
+  },[])
+  async function getNotificationPermission(){
+    const authStatus = await messaging().requestPermission();
+    const enabled =
+      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+  
+    if (enabled) {
+      console.log('Authorization status:', authStatus);
+    }
+  }
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
