@@ -34,12 +34,23 @@ const Home = ({ navigation }) => {
     };
     const addedItems = (item,index) => {
         setSearchedArray((item)=>{
-            console.log(item[index].isSelect);
             item[index].addedQuantity=item[index].addedQuantity+1;
             item[index].isSelect=true;
             return item
         })
-        setSelectedOrder([...selectedOrder, item]);
+        if(item.addedQuantity>0){
+            setSelectedOrder((seletedOrder) =>
+                seletedOrder.map((foodObj) => {
+                    if (foodObj.name === item.name) {
+                        foodObj.addedQuantity=foodObj.addedQuantity;
+                    }
+                    return foodObj;
+                })
+            );
+        }
+        else{
+            setSelectedOrder([...selectedOrder, item]);
+        }
         numberOfItems++;
         setNumberOfItems(numberOfItems);
     }
@@ -99,14 +110,14 @@ const Home = ({ navigation }) => {
                     }
                 </View>
             </ScrollView>
-            {
-                selectedOrder.length === 0 ? null :
+            {/* {
+                selectedOrder.length === 0 ? null : */}
                     <TouchableOpacity style={styles.cartButton}
-                        onPress={() => navigation.navigate("ProductDetials", { selectedOrderArray: selectedOrder })}
+                        onPress={()=>navigation.navigate("ProductDetials", { selectedOrderArray: selectedOrder })}
                     >
                         <Text style={{ color: "white", fontWeight: "600", fontSize: 15 }}>Proceed to cart : {numberOfItems}</Text>
                     </TouchableOpacity>
-            }
+            {/* } */}
         </View>
     )
 }

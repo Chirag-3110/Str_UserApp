@@ -50,7 +50,7 @@ const ProductDetials = ({ route, navigation }) => {
                 {
                     finalArray.map((item, index) => (
                         <>
-                            <View style={styles.ProInfoBox}>
+                            <View key={index} style={styles.ProInfoBox}>
                                 <Image source={{ uri: item.image }} style={styles.ProImage} />
                                 <View style={styles.ProductDescPrice}>
                                     <Text style={styles.DescText}>{item.name}</Text>
@@ -81,7 +81,7 @@ const ProductDetials = ({ route, navigation }) => {
                 <View>
                     <Text style={styles.TotalPriceText}>Total Price :{TotalPriceFinal}</Text>
                 </View>
-                <TouchableOpacity style={styles.PayNowBtn} onPress={() => { navigation.navigate("ProductForm") }}>
+                <TouchableOpacity style={styles.PayNowBtn} onPress={() => { navigation.navigate("ProductForm",{finalProducts:finalArray,totalAmt:TotalPriceFinal}) }}>
                     <Text style={styles.PayNowBtnText}
                     >Add Instruction</Text>
                 </TouchableOpacity>
