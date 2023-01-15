@@ -54,6 +54,34 @@ const Home = ({ navigation }) => {
         numberOfItems++;
         setNumberOfItems(numberOfItems);
     }
+    const handleAmountOfDishes=(item,index)=>{
+        setSearchedArray((item)=>{
+            item[index].addedQuantity=item[index].addedQuantity-1;
+            return item
+        })
+        if(item.addedQuantity>1){
+            setSelectedOrder((seletedOrder) =>
+                seletedOrder.map((foodObj) => {
+                    if (foodObj.name === item.name) {
+                        foodObj.addedQuantity=foodObj.addedQuantity;
+                    }
+                    return foodObj;
+                })
+            );
+        }
+        else if(item.addedQuantity==1){
+            setSearchedArray((item)=>{
+                item[index].isSelect=false;
+                return item
+            })
+            let filteredArray=selectedOrder.filter((orderItem)=>{
+                return orderItem.id!==item.id
+            })
+            setSelectedOrder([...filteredArray]);
+        }
+        numberOfItems--;
+        setNumberOfItems(numberOfItems);
+    }
     useEffect(() => {
         modifyItemsArray()
     }, [])
@@ -100,24 +128,36 @@ const Home = ({ navigation }) => {
                                         </Text>
                                     </View>
                                 </View>
-                                <TouchableOpacity style={[styles.buttonBody,val.isSelect?{borderColor: "red"}:{borderColor: "#28CDA9"}]}
-                                    onPress={() => addedItems(val,index)}
-                                >
-                                    <Text style={[{ fontSize: 15, fontWeight: "700", },val.isSelect?{ color: "red"}:{ color: "#28CDA9"}]}>Add {val.addedQuantity}</Text>
-                                </TouchableOpacity>
+                                {
+                                    val.addedQuantity>0?
+                                    <View style={{flexDirection:"row",justifyContent: 'space-around',width:"100%",alignItems: 'center',}}>
+                                        <TouchableOpacity style={styles.smallButtonBody} onPress={()=>handleAmountOfDishes(val,index)}>
+                                            <Text style={styles.smallButtons}>-</Text>
+                                        </TouchableOpacity>
+                                        <Text style={styles.smallButtons}>{val.addedQuantity}</Text>
+                                        <TouchableOpacity style={styles.smallButtonBody} onPress={() => addedItems(val,index)}>
+                                            <Text style={styles.smallButtons}>+</Text>
+                                        </TouchableOpacity>
+                                    </View>:
+                                    <TouchableOpacity style={[styles.buttonBody,val.isSelect?{borderColor: "red"}:{borderColor: "#28CDA9"}]}
+                                        onPress={() => addedItems(val,index)}
+                                    >
+                                        <Text style={[{ fontSize: 15, fontWeight: "700", },val.isSelect?{ color: "red"}:{ color: "#28CDA9"}]}>Add {val.addedQuantity}</Text>
+                                    </TouchableOpacity>
+                                }
                             </View>
                         ))
                     }
                 </View>
             </ScrollView>
-            {/* {
-                selectedOrder.length === 0 ? null : */}
+            {
+                selectedOrder.length === 0 ? null :
                     <TouchableOpacity style={styles.cartButton}
                         onPress={()=>navigation.navigate("ProductDetials", { selectedOrderArray: selectedOrder })}
                     >
                         <Text style={{ color: "white", fontWeight: "600", fontSize: 15 }}>Proceed to cart : {numberOfItems}</Text>
                     </TouchableOpacity>
-            {/* } */}
+            } 
         </View>
     )
 }
@@ -165,6 +205,21 @@ const styles = StyleSheet.create({
         alignSelf: "center",
         margin: 25,
         borderRadius: 5
+    },
+    smallButtons:{
+        color:"black",
+        fontWeight:"bold",
+        fontSize:20
+    },
+    smallButtonBody:{
+        // padding:5,
+        backgroundColor:"white",
+        height:25,
+        width:25,
+        alignItems:"center",
+        justifyContent: 'center',
+        elevation:5,
+        borderRadius:2
     }
 })
 export default Home;
