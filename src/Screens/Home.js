@@ -13,12 +13,14 @@ import {
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import items from '../AppData/ItemData';
 const { width, height } = Dimensions.get('window');
+import { useIsFocused } from '@react-navigation/native'
 const Home = ({ navigation }) => {
     const [originalArray,setOriginalArray]=useState([]);
     const [searchedArray, setSearchedArray] = useState([]);
     const [search, setSearch] = useState("");
     const [selectedOrder, setSelectedOrder] = useState([]);
     let [numberOfItems, setNumberOfItems] = useState(null);
+    const isFocused = useIsFocused()
     const searchData = (searchItem) => {
         setSearch(searchItem);
         if (search != "") {
@@ -86,12 +88,15 @@ const Home = ({ navigation }) => {
     }
     useEffect(() => {
         modifyItemsArray()
-    }, [])
+        setSelectedOrder([]);
+    }, [isFocused])
     const modifyItemsArray=()=>{
+        console.log('l');
         let newModifiedArray=[]
         items.forEach((item)=>{
             newModifiedArray.push({...item,isSelect:false,addedQuantity:0})
         })
+        setNumberOfItems(null)
         setOriginalArray(newModifiedArray);
         setSearchedArray(newModifiedArray);
     }

@@ -1,3 +1,4 @@
+import { useRoute } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Dimensions, TouchableOpacity, Image, ScrollView } from 'react-native';
 const windoWidth = Dimensions.get('window').width;
@@ -9,7 +10,6 @@ const ProductDetials = ({ route, navigation }) => {
     useEffect(() => {
         finalArray.push(...selectedOrderArray)
         CalCuTotalPrice();
-
     }, [])
     const [counter, setcounter] = useState(1);
     const [TotalPriceFinal, setTotalPriceFinal] = useState(0)
