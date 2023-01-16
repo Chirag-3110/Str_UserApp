@@ -1,4 +1,3 @@
-import { NavigationContainer } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import {
     View,
@@ -8,37 +7,40 @@ import {
     TextInput,
     Dimensions,
     Image,
-    TouchableOpacity
+    TouchableOpacity,
+    FlatList
 } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import items from '../AppData/ItemData';
 const { width, height } = Dimensions.get('window');
 const Home = ({ navigation }) => {
-    const [allOrder,setAllorders]=useState([])
+    const [originalArray,setOriginalArray]=useState([]);
     const [searchedArray, setSearchedArray] = useState([]);
-    let [mangingSearchArray,setManagingSearchArray]=useState([]);
     const [search, setSearch] = useState("");
     const [selectedOrder, setSelectedOrder] = useState([]);
     let [numberOfItems, setNumberOfItems] = useState(null);
     const searchData = (searchItem) => {
         setSearch(searchItem);
-        if (searchItem != "") {
-            const searchedOrders = mangingSearchArray.filter((filteredOrders) => {
+        if (search != "") {
+            const searchedOrders = originalArray.filter((filteredOrders) => {
                 return Object.values(filteredOrders)
                     .join(" ")
                     .toLowerCase()
                     .includes(searchItem.toLowerCase());
             });
-            setManagingSearchArray(searchedOrders);
+            setSearchedArray(searchedOrders);
         } else {
-            setManagingSearchArray(allOrder);
+            setSearchedArray(originalArray);
         }
     };
     const addedItems = (item,index) => {
-        console.log(item.addedQuantity);
-        if(item.addedQuantity<1){
+        setSearchedArray((item)=>{
+            item[index].addedQuantity=item[index].addedQuantity+1;
+            item[index].isSelect=true;
+            return item
+        })
+        if(item.addedQuantity==1){
             setSelectedOrder([...selectedOrder, item]);
-        
         }
         else{
             setSelectedOrder((seletedOrder) =>
@@ -50,31 +52,23 @@ const Home = ({ navigation }) => {
                 })
             );
         }
-        setManagingSearchArray((item)=>{
-            item[index].addedQuantity=item[index].addedQuantity+1;
-            item[index].isSelect=true;
-            return item
-        })
         numberOfItems++;
         setNumberOfItems(numberOfItems);
+        console.log(selectedOrder.length);
     }
     const handleAmountOfDishes=(item,index)=>{
-        setManagingSearchArray((item)=>{
-            item[index].addedQuantity=item[index].addedQuantity-1;
-            return item
-        })
         if(item.addedQuantity>1){
             setSelectedOrder((seletedOrder) =>
                 seletedOrder.map((foodObj) => {
                     if (foodObj.name === item.name) {
-                        foodObj.addedQuantity=item.addedQuantity;
+                        foodObj.addedQuantity=foodObj.addedQuantity;
                     }
                     return foodObj;
                 })
             );
         }
-        else if(item.addedQuantity==1){
-            setManagingSearchArray((item)=>{
+        else if( item.addedQuantity==1){
+            setSearchedArray((item)=>{
                 item[index].isSelect=false;
                 return item
             })
@@ -83,7 +77,10 @@ const Home = ({ navigation }) => {
             })
             setSelectedOrder([...filteredArray]);
         }
-        console.log(item.addedQuantity);
+        setSearchedArray((item)=>{
+            item[index].addedQuantity=item[index].addedQuantity-1;
+            return item
+        })
         numberOfItems--;
         setNumberOfItems(numberOfItems);
     }
@@ -95,8 +92,8 @@ const Home = ({ navigation }) => {
         items.forEach((item)=>{
             newModifiedArray.push({...item,isSelect:false,addedQuantity:0})
         })
-        setAllorders(newModifiedArray);
-        setManagingSearchArray(newModifiedArray);
+        setOriginalArray(newModifiedArray);
+        setSearchedArray(newModifiedArray);
     }
     return (
         <View style={styles.container}>
@@ -108,54 +105,55 @@ const Home = ({ navigation }) => {
             <Text style={{ color: "#137EFF", fontWeight: "bold", textAlign: "left", fontSize: 25, paddingHorizontal: 10 }}>
                 All Orders
             </Text>
-            <ScrollView>
-                <View style={{ flexWrap: "wrap", flexDirection: "row", alignSelf: "center", width, justifyContent: 'center', }}>
-                    {
-                        mangingSearchArray.length===0?null:
-                        mangingSearchArray.map((val,index) => (
-                            <View style={styles.itemContainer} key={val.id}>
-                                <Image
-                                    source={{ uri: val.image }}
-                                    style={{ width: '95%', height: 80, resizeMode: "contain", borderRadius: 10 }}
-                                />
-                                <View style={{ width: '95%', paddingVertical: 10 }}>
-                                    <Text style={{ color: "#137EFF", fontWeight: "bold", textAlign: "left", fontSize: 13 }}>
-                                        {val.name}
+            {
+                originalArray.length===0?null:
+                <FlatList
+                    numColumns={2}
+                    data={searchedArray}
+                    renderItem={({item,index}) => (
+                        <View style={styles.itemContainer} key={item.id}>
+                            <Image
+                                source={{ uri: item.image }}
+                                style={{ width: '95%', height: 80, resizeMode: "contain", borderRadius: 10 }}
+                            />
+                            <View style={{ width: '95%', paddingVertical: 10 }}>
+                                <Text style={{ color: "#137EFF", fontWeight: "bold", textAlign: "left", fontSize: 13 }}>
+                                    {item.name}
+                                </Text>
+                                <View style={{ flexDirection: "row", justifyContent: "space-around", margin: 10 }}>
+                                    <Text style={{ color: "#137EFF", fontWeight: "500", textAlign: "left", fontSize: 12 }}>
+                                        {item.quantity}
                                     </Text>
-                                    <View style={{ flexDirection: "row", justifyContent: "space-around", margin: 10 }}>
-                                        <Text style={{ color: "#137EFF", fontWeight: "500", textAlign: "left", fontSize: 12 }}>
-                                            {val.quantity}
-                                        </Text>
-                                        <Text style={{ color: "#137EFF", fontWeight: "500", textAlign: "left", fontSize: 12 }}>
-                                            for
-                                        </Text>
-                                        <Text style={{ color: "#137EFF", fontWeight: "500", textAlign: "left", fontSize: 12 }}>
-                                            {val.price}
-                                        </Text>
-                                    </View>
+                                    <Text style={{ color: "#137EFF", fontWeight: "500", textAlign: "left", fontSize: 12 }}>
+                                        for
+                                    </Text>
+                                    <Text style={{ color: "#137EFF", fontWeight: "500", textAlign: "left", fontSize: 12 }}>
+                                        {item.price}
+                                    </Text>
                                 </View>
-                                {
-                                    val.addedQuantity>0?
-                                    <View style={{flexDirection:"row",justifyContent: 'space-around',width:"100%",alignItems: 'center',height: 35,}}>
-                                        <TouchableOpacity style={styles.smallButtonBody} onPress={()=>handleAmountOfDishes(val,index)}>
-                                            <Text style={styles.smallButtons}>-</Text>
-                                        </TouchableOpacity>
-                                        <Text style={styles.smallButtons}>{val.addedQuantity}</Text>
-                                        <TouchableOpacity style={styles.smallButtonBody} onPress={() => addedItems(val,index)}>
-                                            <Text style={styles.smallButtons}>+</Text>
-                                        </TouchableOpacity>
-                                    </View>:
-                                    <TouchableOpacity style={styles.buttonBody}
-                                        onPress={() => addedItems(val,index)}
-                                    >
-                                        <Text style={{ fontSize: 15, fontWeight: "700",color: "#28CDA9" }}>Add</Text>
-                                    </TouchableOpacity>
-                                }
                             </View>
-                        ))
-                    }
-                </View>
-            </ScrollView>
+                            {
+                                item.addedQuantity>0?
+                                <View style={{flexDirection:"row",justifyContent: 'space-around',width:"100%",alignItems: 'center',height: 35,}}>
+                                    <TouchableOpacity style={styles.smallButtonBody} onPress={()=>handleAmountOfDishes(item,index)}>
+                                        <Text style={styles.smallButtons}>-</Text>
+                                    </TouchableOpacity>
+                                    <Text style={styles.smallButtons}>{item.addedQuantity}</Text>
+                                    <TouchableOpacity style={styles.smallButtonBody} onPress={() => addedItems(item,index)}>
+                                        <Text style={styles.smallButtons}>+</Text>
+                                    </TouchableOpacity>
+                                </View>:
+                                <TouchableOpacity style={styles.buttonBody}
+                                    onPress={() => addedItems(item,index)}
+                                >
+                                    <Text style={{ fontSize: 15, fontWeight: "700",color: "#28CDA9" }}>Add</Text>
+                                </TouchableOpacity>
+                            }
+                        </View>
+                    )}
+                    keyExtractor={item => item.id}
+                />
+            }
             {
                 selectedOrder.length === 0 ? null :
                     <TouchableOpacity style={styles.cartButton}
