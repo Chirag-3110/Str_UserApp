@@ -158,7 +158,8 @@ const styles = StyleSheet.create({
     heading: {
         color: "black",
         fontSize: 30,
-        fontWeight: "700"
+        // fontWeight: "700",
+        fontFamily:"Ubuntu-BoldItalic"
     },
     subheading: {
         color: "grey",
