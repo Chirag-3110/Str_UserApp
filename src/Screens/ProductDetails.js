@@ -85,7 +85,7 @@ const ProductDetials = ({ route, navigation }) => {
                 <View>
                     <Text style={styles.TotalPriceText}>Total Price :{TotalPriceFinal}</Text>
                 </View>
-                <TouchableOpacity style={styles.PayNowBtn} onPress={() => { navigation.navigate("ProductForm",{finalProducts:finalArray,totalAmt:TotalPriceFinal}) }}>
+                <TouchableOpacity style={styles.PayNowBtn} onPress={() => { navigation.navigate("ProductForm", { finalProducts: finalArray, totalAmt: TotalPriceFinal }) }}>
                     <Text style={styles.PayNowBtnText}
                     >Add Instruction</Text>
                 </TouchableOpacity>
@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
     TopViewText: {
         fontSize: 22,
         color: "black",
-        fontWeight: "700"
+        fontFamily: "Ubuntu-Bold"
     },
     MiddleView: {
         height: windoHeight / 1.3,
@@ -149,16 +149,17 @@ const styles = StyleSheet.create({
     DescText: {
         fontSize: 17,
         color: "black",
-        marginLeft: 4
+        marginLeft: 4,
+        fontFamily: "Ubuntu-Medium"
         // alignSelf: "center"
     },
     PriceText: {
         fontSize: 17,
-        fontWeight: "800",
         color: "black",
         // alignSelf: "center",
         marginLeft: 5,
-        marginVertical: 4
+        marginVertical: 4,
+        fontFamily: "Ubuntu-Bold"
     },
     QuantityText: {
         fontSize: 15,
@@ -179,7 +180,7 @@ const styles = StyleSheet.create({
         fontSize: 17,
         color: "black",
         alignSelf: "center",
-        fontWeight: "700",
+        fontFamily: "Ubuntu-Bold",
         marginVertical: 10
     },
     PayNowBtn: {
