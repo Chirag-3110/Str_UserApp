@@ -22,9 +22,13 @@ const ProductDetials = ({ route, navigation }) => {
     const CalCuTotalPrice = () => {
         console.log("i am called in calc")
         for (i = 0; i < finalArray.length; i++) {
+            // console.log(finalArray[i])
+            IntegerAmount1 = parseInt(finalArray[i].addedQuantity)
+            console.log(IntegerAmount1, "I am quanitty");
+
             IntegerAmount = parseInt(finalArray[i].price)
             console.log("IntAMourt", IntegerAmount)
-            TP = TP + IntegerAmount
+            TP = TP + (IntegerAmount * IntegerAmount1);
         }
         const lastAmount = TP
         setTotalPriceFinal(lastAmount)
@@ -53,7 +57,7 @@ const ProductDetials = ({ route, navigation }) => {
                             <View key={index} style={styles.ProInfoBox}>
                                 <Image source={{ uri: item.image }} style={styles.ProImage} />
                                 <View style={styles.ProductDescPrice}>
-                                    <Text style={styles.DescText}>{item.name}</Text>
+                                    <Text style={styles.DescText}>{item.name}-{item.addedQuantity}</Text>
                                     <Text style={styles.PriceText}>Price : {item.price}</Text>
                                 </View>
                                 <View style={styles.QuantityView}>

@@ -130,7 +130,7 @@ const Home = ({ navigation }) => {
                                 </View>
                                 {
                                     val.addedQuantity>0?
-                                    <View style={{flexDirection:"row",justifyContent: 'space-around',width:"100%",alignItems: 'center',}}>
+                                    <View style={{flexDirection:"row",justifyContent: 'space-around',width:"100%",alignItems: 'center',height: 35,}}>
                                         <TouchableOpacity style={styles.smallButtonBody} onPress={()=>handleAmountOfDishes(val,index)}>
                                             <Text style={styles.smallButtons}>-</Text>
                                         </TouchableOpacity>
@@ -139,10 +139,10 @@ const Home = ({ navigation }) => {
                                             <Text style={styles.smallButtons}>+</Text>
                                         </TouchableOpacity>
                                     </View>:
-                                    <TouchableOpacity style={[styles.buttonBody,val.isSelect?{borderColor: "red"}:{borderColor: "#28CDA9"}]}
+                                    <TouchableOpacity style={styles.buttonBody}
                                         onPress={() => addedItems(val,index)}
                                     >
-                                        <Text style={[{ fontSize: 15, fontWeight: "700", },val.isSelect?{ color: "red"}:{ color: "#28CDA9"}]}>Add {val.addedQuantity}</Text>
+                                        <Text style={{ fontSize: 15, fontWeight: "700",color: "#28CDA9" }}>Add</Text>
                                     </TouchableOpacity>
                                 }
                             </View>
@@ -194,7 +194,8 @@ const styles = StyleSheet.create({
         borderWidth: 2,
         alignItems: 'center',
         justifyContent: "center",
-        borderRadius: 5
+        borderRadius: 5,
+        borderColor: "#28CDA9"
     },
     cartButton: {
         width: width - 20,
@@ -209,10 +210,9 @@ const styles = StyleSheet.create({
     smallButtons:{
         color:"black",
         fontWeight:"bold",
-        fontSize:20
+        fontSize:20,
     },
     smallButtonBody:{
-        // padding:5,
         backgroundColor:"white",
         height:25,
         width:25,

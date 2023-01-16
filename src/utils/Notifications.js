@@ -18,10 +18,10 @@ const getFCMToken=async()=>{
     console.log(fcmtoken,'toen');
     if(!fcmtoken){
         try {
-            if(FCMToken){
-                let FCMToken=await messaging().getToken();
-                AsyncStorage.setItem("fcmtoken",FCMToken);
-            }
+          let FCMToken=await messaging().getToken();
+          if(FCMToken){
+              AsyncStorage.setItem("fcmtoken",FCMToken);
+          }
         } catch (error) {
             console.log(error);
         }
