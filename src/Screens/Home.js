@@ -14,31 +14,33 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import items from '../AppData/ItemData';
 const { width, height } = Dimensions.get('window');
 const Home = ({ navigation }) => {
+    const [allOrder,setAllorders]=useState([])
     const [searchedArray, setSearchedArray] = useState([]);
+    let [mangingSearchArray,setManagingSearchArray]=useState([]);
     const [search, setSearch] = useState("");
     const [selectedOrder, setSelectedOrder] = useState([]);
     let [numberOfItems, setNumberOfItems] = useState(null);
     const searchData = (searchItem) => {
         setSearch(searchItem);
-        if (search != "") {
-            const searchedOrders = items.filter((filteredOrders) => {
+        if (searchItem != "") {
+            const searchedOrders = mangingSearchArray.filter((filteredOrders) => {
                 return Object.values(filteredOrders)
                     .join(" ")
                     .toLowerCase()
                     .includes(searchItem.toLowerCase());
             });
-            setSearchedArray(searchedOrders);
+            setManagingSearchArray(searchedOrders);
         } else {
-            setSearchedArray(items);
+            setManagingSearchArray(allOrder);
         }
     };
     const addedItems = (item,index) => {
-        setSearchedArray((item)=>{
-            item[index].addedQuantity=item[index].addedQuantity+1;
-            item[index].isSelect=true;
-            return item
-        })
-        if(item.addedQuantity>0){
+        console.log(item.addedQuantity);
+        if(item.addedQuantity<1){
+            setSelectedOrder([...selectedOrder, item]);
+        
+        }
+        else{
             setSelectedOrder((seletedOrder) =>
                 seletedOrder.map((foodObj) => {
                     if (foodObj.name === item.name) {
@@ -48,14 +50,16 @@ const Home = ({ navigation }) => {
                 })
             );
         }
-        else{
-            setSelectedOrder([...selectedOrder, item]);
-        }
+        setManagingSearchArray((item)=>{
+            item[index].addedQuantity=item[index].addedQuantity+1;
+            item[index].isSelect=true;
+            return item
+        })
         numberOfItems++;
         setNumberOfItems(numberOfItems);
     }
     const handleAmountOfDishes=(item,index)=>{
-        setSearchedArray((item)=>{
+        setManagingSearchArray((item)=>{
             item[index].addedQuantity=item[index].addedQuantity-1;
             return item
         })
@@ -63,14 +67,14 @@ const Home = ({ navigation }) => {
             setSelectedOrder((seletedOrder) =>
                 seletedOrder.map((foodObj) => {
                     if (foodObj.name === item.name) {
-                        foodObj.addedQuantity=foodObj.addedQuantity;
+                        foodObj.addedQuantity=item.addedQuantity;
                     }
                     return foodObj;
                 })
             );
         }
         else if(item.addedQuantity==1){
-            setSearchedArray((item)=>{
+            setManagingSearchArray((item)=>{
                 item[index].isSelect=false;
                 return item
             })
@@ -79,6 +83,7 @@ const Home = ({ navigation }) => {
             })
             setSelectedOrder([...filteredArray]);
         }
+        console.log(item.addedQuantity);
         numberOfItems--;
         setNumberOfItems(numberOfItems);
     }
@@ -90,7 +95,8 @@ const Home = ({ navigation }) => {
         items.forEach((item)=>{
             newModifiedArray.push({...item,isSelect:false,addedQuantity:0})
         })
-        setSearchedArray(newModifiedArray);
+        setAllorders(newModifiedArray);
+        setManagingSearchArray(newModifiedArray);
     }
     return (
         <View style={styles.container}>
@@ -105,8 +111,8 @@ const Home = ({ navigation }) => {
             <ScrollView>
                 <View style={{ flexWrap: "wrap", flexDirection: "row", alignSelf: "center", width, justifyContent: 'center', }}>
                     {
-                        searchedArray.length===0?null:
-                        searchedArray.map((val,index) => (
+                        mangingSearchArray.length===0?null:
+                        mangingSearchArray.map((val,index) => (
                             <View style={styles.itemContainer} key={val.id}>
                                 <Image
                                     source={{ uri: val.image }}

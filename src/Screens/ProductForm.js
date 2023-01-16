@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
     View,
-    Text, StyleSheet, TextInput, TouchableOpacity, ActivityIndicator
+    Text, StyleSheet, TextInput, TouchableOpacity, ActivityIndicator, ScrollView
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -85,7 +85,7 @@ const ProductForm = ({ navigation,route }) => {
         }
     }
     return (
-        <View style={styles.body}>
+        <ScrollView style={styles.body}>
             <Text style={styles.heading}>Enter Details</Text>
             <View style={styles.form}>
                 <Text style={styles.label}>Email</Text>
@@ -144,16 +144,16 @@ const ProductForm = ({ navigation,route }) => {
                     <Text style={styles.submittext}>Pay Now</Text>
                 }
             </TouchableOpacity>
-        </View>
+        </ScrollView>
     )
 }
 export default ProductForm;
 const styles = StyleSheet.create({
     body: {
-        paddingTop: 20,
+        paddingVertical: 20,
         paddingHorizontal: 20,
         backgroundColor: "white",
-        flex: 1
+        flex: 1,
     },
     heading: {
         color: "black",
@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
     },
     form: {
         marginVertical: 20,
-        marginBottom: 20
+        // marginBottom: 20,
     },
     label: {
         marginVertical: 5,
@@ -189,11 +189,12 @@ const styles = StyleSheet.create({
         backgroundColor: "#28CDA9",
         justifyContent: "center",
         alignItems: "center",
-        borderRadius: 8
+        borderRadius: 8,
+        marginBottom:40
     },
     submittext: {
         fontSize: 16,
         color: "white",
-        fontWeight: "700"
+        fontWeight: "700",
     },
 })

@@ -34,6 +34,10 @@ const ProductDetials = ({ route, navigation }) => {
         setTotalPriceFinal(lastAmount)
     }
     const DeleteItem = (id) => {
+        if(finalArray.length===1){
+            navigation.navigate("Home")
+            return;
+        }
         const newArr = finalArray.filter((obj) => obj.id !== id);
         // console.log("i am hello", newArr)
         setfinalArray(newArr)
