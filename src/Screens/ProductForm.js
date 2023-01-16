@@ -6,79 +6,79 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-const ProductForm = ({ navigation,route }) => {
-    const [fcmToken,setfcmToken]=useState(null);
-    const {finalProducts,totalAmt}=route.params;
-    const [userSelectedOrders,setUsersSelectedOreders]=useState([]);
-    const [loading,setLoading]=useState(false);
-    const [email,setEmail]=useState(null);
-    const [name,setName]=useState(null);
-    const [address,setAddress]=useState(null);
-    const [phone,setPhone]=useState(null);
-    const [instruction,setInstruction]=useState(null);
+const ProductForm = ({ navigation, route }) => {
+    const [fcmToken, setfcmToken] = useState(null);
+    const { finalProducts, totalAmt } = route.params;
+    const [userSelectedOrders, setUsersSelectedOreders] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [email, setEmail] = useState(null);
+    const [name, setName] = useState(null);
+    const [address, setAddress] = useState(null);
+    const [phone, setPhone] = useState(null);
+    const [instruction, setInstruction] = useState(null);
 
-    useEffect(()=>{
+    useEffect(() => {
         setUsersSelectedOreders(finalProducts)
         getFcmToken()
-    },[])
-    const getFcmToken=async()=>{
-        const cloudToken=await AsyncStorage.getItem("fcmtoken");
+    }, [])
+    const getFcmToken = async () => {
+        const cloudToken = await AsyncStorage.getItem("fcmtoken");
         setfcmToken(cloudToken)
     }
-    const checkForDetails=()=>{
+    const checkForDetails = () => {
         try {
-            if(email===null)
+            if (email === null)
                 throw "Please enter email";
-            if(name===null)
+            if (name === null)
                 throw "Please enter name";
-            if(address===null)
+            if (address === null)
                 throw "Please enter address";
-            if(phone===null)
+            if (phone === null)
                 throw "Please enter phone";
-            if(instruction===null)
+            if (instruction === null)
                 throw "Please enter instruction";
             placeOrderForConfirmation()
         } catch (error) {
             alert(error);
         }
     }
-    const placeOrderForConfirmation=()=>{
-        let finalArrayProducts=[];
-        userSelectedOrders.forEach((value)=>{
+    const placeOrderForConfirmation = () => {
+        let finalArrayProducts = [];
+        userSelectedOrders.forEach((value) => {
             finalArrayProducts.push({
                 dishName: value.name,
                 amount: value.quantity,
                 price: value.price
             })
         })
-        const orderData={
+        const orderData = {
             storeNumber: "1",
             name: name,
             phone: phone,
             address: address,
-            order:finalArrayProducts,
-            totalAmount:totalAmt,
-            FCM_Token:fcmToken
+            order: finalArrayProducts,
+            totalAmount: totalAmt,
+            FCM_Token: fcmToken
         }
         try {
             setLoading(true);
-            fetch("https://ordermanagementserver-production.up.railway.app/orderTaken",{
-                method:"POST",
-                headers:{
+            fetch("https://ordermanagementserver-production.up.railway.app/orderTaken", {
+                method: "POST",
+                headers: {
                     Accept: 'application/json',
                     'Content-Type': 'application/json',
                 },
-                body:JSON.stringify(orderData)
+                body: JSON.stringify(orderData)
             })
-            .then((res)=>res.json())
-            .then((response)=>{
-                setLoading(false)
-                navigation.navigate("OrderConfirm")
-            })
-            .catch((e)=>{
-                console.log(e);
-                setLoading(false)
-            })
+                .then((res) => res.json())
+                .then((response) => {
+                    setLoading(false)
+                    navigation.navigate("OrderConfirm")
+                })
+                .catch((e) => {
+                    console.log(e);
+                    setLoading(false)
+                })
         } catch (error) {
             console.log(error);
             setLoading(false)
@@ -91,16 +91,16 @@ const ProductForm = ({ navigation,route }) => {
                 <Text style={styles.label}>Email</Text>
                 <View style={styles.container}>
                     <MaterialCommunityIcons name='email' color={'#28CDA9'} size={22} />
-                    <TextInput style={{ marginLeft: 7,color:"black" }} placeholderTextColor="black" placeholder='Email'
-                        onChangeText={email=>setEmail(email)}
+                    <TextInput style={{ marginLeft: 7, color: "black" }} placeholderTextColor="black" placeholder='Email'
+                        onChangeText={email => setEmail(email)}
                     />
                 </View>
                 <View style={{ marginVertical: 10, }}>
                     <Text style={styles.label}>Name</Text>
                     <View style={styles.container}>
                         <Ionicons name='person' color={'#28CDA9'} size={22} />
-                        <TextInput style={{ marginLeft: 7,color:"black" }} placeholderTextColor="black" placeholder='Name' 
-                            onChangeText={name=>setName(name)}
+                        <TextInput style={{ marginLeft: 7, color: "black" }} placeholderTextColor="black" placeholder='Name'
+                            onChangeText={name => setName(name)}
                         />
                     </View>
                 </View>
@@ -108,8 +108,8 @@ const ProductForm = ({ navigation,route }) => {
                     <Text style={styles.label}>Address</Text>
                     <View style={styles.container}>
                         <Ionicons name='ios-location-sharp' color={'#28CDA9'} size={22} />
-                        <TextInput style={{ marginLeft: 7,color:"black" }} placeholderTextColor="black" placeholder='Address' 
-                            onChangeText={address=>setAddress(address)}
+                        <TextInput style={{ marginLeft: 7, color: "black" }} placeholderTextColor="black" placeholder='Address'
+                            onChangeText={address => setAddress(address)}
                         />
                     </View>
                 </View>
@@ -118,8 +118,8 @@ const ProductForm = ({ navigation,route }) => {
                     <Text style={styles.label}>Phone Number</Text>
                     <View style={styles.container}>
                         <MaterialCommunityIcons name='phone' color={'#28CDA9'} size={22} />
-                        <TextInput style={{ marginLeft: 7,color:"black" }} placeholderTextColor="black" placeholder='Phone Number' 
-                            onChangeText={phone=>setPhone(phone)}
+                        <TextInput style={{ marginLeft: 7, color: "black" }} placeholderTextColor="black" placeholder='Phone Number'
+                            onChangeText={phone => setPhone(phone)}
                             keyboardType={"number-pad"}
                         />
                     </View>
@@ -129,8 +129,8 @@ const ProductForm = ({ navigation,route }) => {
                     <Text style={styles.label}>Preparation Instructions</Text>
                     <View style={styles.container}>
                         <Ionicons name='basket-sharp' color={'#28CDA9'} size={22} />
-                        <TextInput style={{ marginLeft: 7,color:"black" }} placeholderTextColor="black" placeholder='Preparation Instructions' 
-                            onChangeText={instruction=>setInstruction(instruction)}
+                        <TextInput style={{ marginLeft: 7, color: "black" }} placeholderTextColor="black" placeholder='Preparation Instructions'
+                            onChangeText={instruction => setInstruction(instruction)}
                         />
                     </View>
                 </View>
@@ -139,9 +139,9 @@ const ProductForm = ({ navigation,route }) => {
 
             <TouchableOpacity style={styles.submitbtn} onPress={checkForDetails}>
                 {
-                    loading?
-                    <ActivityIndicator size={25} color="white"/>:
-                    <Text style={styles.submittext}>Pay Now</Text>
+                    loading ?
+                        <ActivityIndicator size={25} color="white" /> :
+                        <Text style={styles.submittext}>Pay Now</Text>
                 }
             </TouchableOpacity>
         </ScrollView>
@@ -158,12 +158,14 @@ const styles = StyleSheet.create({
     heading: {
         color: "black",
         fontSize: 30,
-        fontWeight: "700"
+        // fontWeight: "700",
+        fontFamily: "Ubuntu-Bold"
     },
     subheading: {
         color: "grey",
         fontSize: 18,
-        marginVertical: 10
+        marginVertical: 10,
+        fontFamily: "Ubuntu-Bold"
     },
     form: {
         marginVertical: 20,
@@ -172,7 +174,8 @@ const styles = StyleSheet.create({
     label: {
         marginVertical: 5,
         fontSize: 14,
-        color: "grey,"
+        color: "grey,",
+        fontFamily: "Ubuntu-Medium"
     },
     container: {
         height: 55,
