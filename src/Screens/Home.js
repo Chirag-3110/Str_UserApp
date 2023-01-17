@@ -166,8 +166,11 @@ const Home = ({ navigation }) => {
                     >
                         <Text style={{ color: "white", fontWeight: "600", fontSize: 15 }}>Proceed to cart : {numberOfItems}</Text>
                     </TouchableOpacity>
+                    
             } 
+            <View style={{height:130}}></View>
         </View>
+        
     )
 }
 const styles = StyleSheet.create({

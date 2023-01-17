@@ -8,7 +8,7 @@ const windoHeight = Dimensions.get('window').height;
 function Splash({ navigation }) {
     useEffect(() => {
         setTimeout(() => {
-            navigation.navigate("Home")
+            navigation.navigate("bottomtab")
         }, 2000);
     }, [])
 
