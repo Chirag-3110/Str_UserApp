@@ -15,7 +15,7 @@ import items from '../AppData/ItemData';
 const { width, height } = Dimensions.get('window');
 import { useIsFocused } from '@react-navigation/native'
 const Home = ({ navigation }) => {
-    const [originalArray,setOriginalArray]=useState([]);
+    const [originalArray, setOriginalArray] = useState([]);
     const [searchedArray, setSearchedArray] = useState([]);
     const [search, setSearch] = useState("");
     const [selectedOrder, setSelectedOrder] = useState([]);
@@ -35,20 +35,20 @@ const Home = ({ navigation }) => {
             setSearchedArray(originalArray);
         }
     };
-    const addedItems = (item,index) => {
-        setSearchedArray((item)=>{
-            item[index].addedQuantity=item[index].addedQuantity+1;
-            item[index].isSelect=true;
+    const addedItems = (item, index) => {
+        setSearchedArray((item) => {
+            item[index].addedQuantity = item[index].addedQuantity + 1;
+            item[index].isSelect = true;
             return item
         })
-        if(item.addedQuantity==1){
+        if (item.addedQuantity == 1) {
             setSelectedOrder([...selectedOrder, item]);
         }
-        else{
+        else {
             setSelectedOrder((seletedOrder) =>
                 seletedOrder.map((foodObj) => {
                     if (foodObj.name === item.name) {
-                        foodObj.addedQuantity=foodObj.addedQuantity;
+                        foodObj.addedQuantity = foodObj.addedQuantity;
                     }
                     return foodObj;
                 })
@@ -58,29 +58,29 @@ const Home = ({ navigation }) => {
         setNumberOfItems(numberOfItems);
         console.log(selectedOrder.length);
     }
-    const handleAmountOfDishes=(item,index)=>{
-        if(item.addedQuantity>1){
+    const handleAmountOfDishes = (item, index) => {
+        if (item.addedQuantity > 1) {
             setSelectedOrder((seletedOrder) =>
                 seletedOrder.map((foodObj) => {
                     if (foodObj.name === item.name) {
-                        foodObj.addedQuantity=foodObj.addedQuantity;
+                        foodObj.addedQuantity = foodObj.addedQuantity;
                     }
                     return foodObj;
                 })
             );
         }
-        else if( item.addedQuantity==1){
-            setSearchedArray((item)=>{
-                item[index].isSelect=false;
+        else if (item.addedQuantity == 1) {
+            setSearchedArray((item) => {
+                item[index].isSelect = false;
                 return item
             })
-            let filteredArray=selectedOrder.filter((orderItem)=>{
-                return orderItem.id!==item.id
+            let filteredArray = selectedOrder.filter((orderItem) => {
+                return orderItem.id !== item.id
             })
             setSelectedOrder([...filteredArray]);
         }
-        setSearchedArray((item)=>{
-            item[index].addedQuantity=item[index].addedQuantity-1;
+        setSearchedArray((item) => {
+            item[index].addedQuantity = item[index].addedQuantity - 1;
             return item
         })
         numberOfItems--;
@@ -90,11 +90,11 @@ const Home = ({ navigation }) => {
         modifyItemsArray()
         setSelectedOrder([]);
     }, [isFocused])
-    const modifyItemsArray=()=>{
+    const modifyItemsArray = () => {
         console.log('l');
-        let newModifiedArray=[]
-        items.forEach((item)=>{
-            newModifiedArray.push({...item,isSelect:false,addedQuantity:0})
+        let newModifiedArray = []
+        items.forEach((item) => {
+            newModifiedArray.push({ ...item, isSelect: false, addedQuantity: 0 })
         })
         setNumberOfItems(null)
         setOriginalArray(newModifiedArray);
@@ -111,66 +111,66 @@ const Home = ({ navigation }) => {
                 All Orders
             </Text>
             {
-                originalArray.length===0?null:
-                <FlatList
-                    numColumns={2}
-                    data={searchedArray}
-                    renderItem={({item,index}) => (
-                        <View style={styles.itemContainer} key={item.id}>
-                            <Image
-                                source={{ uri: item.image }}
-                                style={{ width: '95%', height: 80, resizeMode: "contain", borderRadius: 10 }}
-                            />
-                            <View style={{ width: '95%', paddingVertical: 10 }}>
-                                <Text style={{ color: "#137EFF", fontWeight: "bold", textAlign: "left", fontSize: 13 }}>
-                                    {item.name}
-                                </Text>
-                                <View style={{ flexDirection: "row", justifyContent: "space-around", margin: 10 }}>
-                                    <Text style={{ color: "#137EFF", fontWeight: "500", textAlign: "left", fontSize: 12 }}>
-                                        {item.quantity}
+                originalArray.length === 0 ? null :
+                    <FlatList
+                        numColumns={2}
+                        data={searchedArray}
+                        renderItem={({ item, index }) => (
+                            <View style={styles.itemContainer} key={item.id}>
+                                <Image
+                                    source={{ uri: item.image }}
+                                    style={{ width: '95%', height: 80, resizeMode: "contain", borderRadius: 10 }}
+                                />
+                                <View style={{ width: '95%', paddingVertical: 10 }}>
+                                    <Text style={{ color: "#137EFF", fontWeight: "bold", textAlign: "left", fontSize: 13 }}>
+                                        {item.name}
                                     </Text>
-                                    <Text style={{ color: "#137EFF", fontWeight: "500", textAlign: "left", fontSize: 12 }}>
-                                        for
-                                    </Text>
-                                    <Text style={{ color: "#137EFF", fontWeight: "500", textAlign: "left", fontSize: 12 }}>
-                                        {item.price}
-                                    </Text>
+                                    <View style={{ flexDirection: "row", justifyContent: "space-around", margin: 10 }}>
+                                        <Text style={{ color: "#137EFF", fontWeight: "500", textAlign: "left", fontSize: 12 }}>
+                                            {item.quantity}
+                                        </Text>
+                                        <Text style={{ color: "#137EFF", fontWeight: "500", textAlign: "left", fontSize: 12 }}>
+                                            for
+                                        </Text>
+                                        <Text style={{ color: "#137EFF", fontWeight: "500", textAlign: "left", fontSize: 12 }}>
+                                            {item.price}
+                                        </Text>
+                                    </View>
                                 </View>
+                                {
+                                    item.addedQuantity > 0 ?
+                                        <View style={{ flexDirection: "row", justifyContent: 'space-around', width: "100%", alignItems: 'center', height: 35, }}>
+                                            <TouchableOpacity style={styles.smallButtonBody} onPress={() => handleAmountOfDishes(item, index)}>
+                                                <Text style={styles.smallButtons}>-</Text>
+                                            </TouchableOpacity>
+                                            <Text style={styles.smallButtons}>{item.addedQuantity}</Text>
+                                            <TouchableOpacity style={styles.smallButtonBody} onPress={() => addedItems(item, index)}>
+                                                <Text style={styles.smallButtons}>+</Text>
+                                            </TouchableOpacity>
+                                        </View> :
+                                        <TouchableOpacity style={styles.buttonBody}
+                                            onPress={() => addedItems(item, index)}
+                                        >
+                                            <Text style={{ fontSize: 15, fontWeight: "700", color: "#28CDA9" }}>Add</Text>
+                                        </TouchableOpacity>
+                                }
                             </View>
-                            {
-                                item.addedQuantity>0?
-                                <View style={{flexDirection:"row",justifyContent: 'space-around',width:"100%",alignItems: 'center',height: 35,}}>
-                                    <TouchableOpacity style={styles.smallButtonBody} onPress={()=>handleAmountOfDishes(item,index)}>
-                                        <Text style={styles.smallButtons}>-</Text>
-                                    </TouchableOpacity>
-                                    <Text style={styles.smallButtons}>{item.addedQuantity}</Text>
-                                    <TouchableOpacity style={styles.smallButtonBody} onPress={() => addedItems(item,index)}>
-                                        <Text style={styles.smallButtons}>+</Text>
-                                    </TouchableOpacity>
-                                </View>:
-                                <TouchableOpacity style={styles.buttonBody}
-                                    onPress={() => addedItems(item,index)}
-                                >
-                                    <Text style={{ fontSize: 15, fontWeight: "700",color: "#28CDA9" }}>Add</Text>
-                                </TouchableOpacity>
-                            }
-                        </View>
-                    )}
-                    keyExtractor={item => item.id}
-                />
+                        )}
+                        keyExtractor={item => item.id}
+                    />
             }
             {
                 selectedOrder.length === 0 ? null :
                     <TouchableOpacity style={styles.cartButton}
-                        onPress={()=>navigation.navigate("ProductDetials", { selectedOrderArray: selectedOrder })}
+                        onPress={() => navigation.navigate("ProductDetials", { selectedOrderArray: selectedOrder })}
                     >
                         <Text style={{ color: "white", fontWeight: "600", fontSize: 15 }}>Proceed to cart : {numberOfItems}</Text>
                     </TouchableOpacity>
-                    
-            } 
-            <View style={{height:130}}></View>
+
+            }
+            <View style={{ height: 59 }}></View>
         </View>
-        
+
     )
 }
 const styles = StyleSheet.create({
@@ -211,27 +211,27 @@ const styles = StyleSheet.create({
     },
     cartButton: {
         width: width - 20,
-        height: 45,
+        height: 40,
         alignItems: 'center',
         justifyContent: "center",
         backgroundColor: "#28CDA9",
         alignSelf: "center",
-        margin: 25,
-        borderRadius: 5
+        marginBottom: 3,
+        borderRadius: 5,
     },
-    smallButtons:{
-        color:"black",
-        fontWeight:"bold",
-        fontSize:20,
+    smallButtons: {
+        color: "black",
+        fontWeight: "bold",
+        fontSize: 20,
     },
-    smallButtonBody:{
-        backgroundColor:"white",
-        height:25,
-        width:25,
-        alignItems:"center",
+    smallButtonBody: {
+        backgroundColor: "white",
+        height: 25,
+        width: 25,
+        alignItems: "center",
         justifyContent: 'center',
-        elevation:5,
-        borderRadius:2
+        elevation: 5,
+        borderRadius: 2
     }
 })
 export default Home;
