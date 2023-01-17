@@ -9,9 +9,9 @@ import ProductDetials from './src/Screens/ProductDetails';
 import ProductForm from './src/Screens/ProductForm';
 import OrderConfirm from './src/Screens/OrderConfirm';
 import Splash from './src/Screens/Splash';
-import messaging from '@react-native-firebase/messaging';
 import { requestUserPermission,NotificationListner } from './src/utils/Notifications';
 import Bottomtab from './navigators/Bottomtab';
+import InternetCheck from './src/utils/InternetError';
 const Stack = createNativeStackNavigator();
 
 function App() {
@@ -33,15 +33,16 @@ function App() {
     <>
      <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Splash" component={Splash} />
-          <Stack.Screen name="bottomtab" component={Bottomtab}/>
-          <Stack.Screen name="ProductDetials" component={ProductDetials} />
-          <Stack.Screen name="ProductForm" component={ProductForm} />
-          <Stack.Screen name="OrderConfirm" component={OrderConfirm} />
-        </Stack.Navigator>
-      </NavigationContainer>
+          <Stack.Screen name="Splash" component={Splash} />
+            <Stack.Screen name="bottomtab" component={Bottomtab}/>
+            <Stack.Screen name="ProductDetials" component={ProductDetials} />
+            <Stack.Screen name="ProductForm" component={ProductForm} />
+            <Stack.Screen name="OrderConfirm" component={OrderConfirm} />
+          </Stack.Navigator>
+        </NavigationContainer>
+        <InternetCheck/>
      </>
-   
+  
   );
 }
 
