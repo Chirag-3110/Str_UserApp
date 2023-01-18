@@ -47,7 +47,7 @@ const ProductForm = ({ navigation, route }) => {
         userSelectedOrders.forEach((value) => {
             finalArrayProducts.push({
                 dishName: value.name,
-                amount: value.quantity,
+                amount: value.addedQuantity,
                 price: value.price
             })
         })

@@ -15,7 +15,7 @@ const Bottomtab = () => {
         tabBarShowLabel: false,
         showIcon: false,
         tabBarStyle: [{
-          position: "absolute",
+          // position: "absolute",
           // bottom: 5,
           // left: 3,
           // right: 3,

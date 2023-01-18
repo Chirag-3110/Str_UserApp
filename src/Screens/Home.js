@@ -56,7 +56,6 @@ const Home = ({ navigation }) => {
         }
         numberOfItems++;
         setNumberOfItems(numberOfItems);
-        console.log(selectedOrder.length);
     }
     const handleAmountOfDishes = (item, index) => {
         if (item.addedQuantity > 1) {
@@ -168,7 +167,6 @@ const Home = ({ navigation }) => {
                     </TouchableOpacity>
 
             }
-            <View style={{ height: 59 }}></View>
         </View>
 
     )
