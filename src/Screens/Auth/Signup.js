@@ -20,6 +20,7 @@ const SignUp = ({ navigation }) => {
     useEffect(() => {
         showPopUp();
         getFcmToken()
+        
     }, [])
     const getFcmToken=async()=>{
         let fcmtoken=await AsyncStorage.getItem("fcmtoken");
@@ -140,8 +141,8 @@ const SignUp = ({ navigation }) => {
                         <TouchableOpacity onPress={() => setShowPassword(!showPassword)} >
                             {
                                 showPassword ?
-                                    <FontAwesome name="eye" size={25} color={"grey"} /> :
-                                    <FontAwesome name="eye-slash" size={25} color={"grey"} />
+                                <FontAwesome name="eye" size={25} color={"grey"} /> :
+                                <FontAwesome name="eye-slash" size={25} color={"grey"} />
                             }
                         </TouchableOpacity>
                     </View>

@@ -6,6 +6,8 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import firestore from '@react-native-firebase/firestore';
+
 const ProductForm = ({ navigation, route }) => {
     const [fcmToken, setfcmToken] = useState(null);
     const { finalProducts, totalAmt } = route.params;
@@ -16,11 +18,41 @@ const ProductForm = ({ navigation, route }) => {
     const [address, setAddress] = useState(null);
     const [phone, setPhone] = useState(null);
     const [instruction, setInstruction] = useState(null);
-
+    const [allUsersToken,setAllUsersToken]=useState([])
     useEffect(() => {
         setUsersSelectedOreders(finalProducts)
         getFcmToken()
+        getAllUsers()
     }, [])
+    const getAllUsers=()=>{
+        firestore().collection('Users').get()
+        .then(querySnapShot=>{
+            const user=querySnapShot._docs.map((token)=>{
+                return token._data.UserFcmToken
+            })
+            setAllUsersToken(user)
+        })
+        .catch((e)=>{
+            console.log(e);
+        })
+    }
+    const notificationHandler=()=>{
+        fetch('http://192.168.182.30:8000/triggerNotification',{
+            method:"POST",
+            headers:{
+                'Content-Type':"application/json"
+            },
+            body:JSON.stringify({
+                tokens:allUsersToken,
+                notificationBody:"New Order is recieved"
+            })
+        })
+        .then((res)=>res.json())
+        .then((data)=>console.log(data.message))
+        .catch((e)=>{
+            console.log(e);
+        })
+    }
     const getFcmToken = async () => {
         const cloudToken = await AsyncStorage.getItem("fcmtoken");
         setfcmToken(cloudToken)
@@ -72,8 +104,8 @@ const ProductForm = ({ navigation, route }) => {
             })
                 .then((res) => res.json())
                 .then((response) => {
+                    notificationHandler();
                     setLoading(false)
-                    navigation.navigate("OrderConfirm")
                 })
                 .catch((e) => {
                     console.log(e);
