@@ -5,6 +5,10 @@ const windowWidth = Dimensions.get('window').width;
 const windowheight = Dimensions.get('window').height
 import styles from "./style";
 import Lottie from 'lottie-react-native';
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const SignUp = ({ navigation }) => {
 
     const [loading,setLoading]=useState(false)
@@ -12,10 +16,17 @@ const SignUp = ({ navigation }) => {
     const [password, setpassword] = useState('');
     const [Cpassword, setCpassword] = useState('');
     const [showPassword, setShowPassword] = useState(true);
-
+    const [userFcmToken,setUserFcmToken]=useState(null);
     useEffect(() => {
         showPopUp();
+        getFcmToken()
     }, [])
+    const getFcmToken=async()=>{
+        let fcmtoken=await AsyncStorage.getItem("fcmtoken");
+        console.log(fcmtoken);
+        setUserFcmToken(fcmtoken)
+    }
+
     const position = new Animated.ValueXY({ x: 0, y: -windowheight });
     const subTextposition = new Animated.ValueXY({ x: 0, y: -windowheight });
     const showPopUp = () => {
@@ -30,6 +41,42 @@ const SignUp = ({ navigation }) => {
                 useNativeDriver: true
             }).start();
         });
+    }
+    const SignUp=()=>{
+        try {
+            if(email==='')
+                throw "Enter email"
+            if(password==='')
+                throw "Enter Password"
+            if(password!==Cpassword)
+                throw "Password must be same"
+            setLoading(true)
+            auth()
+            .createUserWithEmailAndPassword(email,password)
+            .then((userCredential) => {
+                var user = userCredential.user;
+                firestore().collection('Users').doc(user.uid).set({
+                    UserFcmToken:userFcmToken 
+                })
+                .then(() => {
+                    console.log('User added!');
+                    setLoading(false)
+                });
+            })
+            .catch(error => {
+                if (error.code === 'auth/email-already-in-use') {
+                console.log('That email address is already in use!');
+                }
+            
+                if (error.code === 'auth/invalid-email') {
+                console.log('That email address is invalid!');
+                }
+                setLoading(false)
+                // console.error(error);
+            });
+        } catch (error) {
+            alert(error);
+        }
     }
     return (
         <View style={styles.container}>
@@ -120,7 +167,7 @@ const SignUp = ({ navigation }) => {
                     {
                         loading?
                         <ActivityIndicator size={25} color={"white"}/>:
-                        <Text style={[styles.btnText,{fontFamily:"SourceSansPro-Bold"}]}>
+                        <Text style={[styles.btnText,{fontFamily:"SourceSansPro-Bold"}]} onPress={SignUp}>
                             Create Account
                         </Text>
                     }

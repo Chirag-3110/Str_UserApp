@@ -14,6 +14,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import items from '../AppData/ItemData';
 const { width, height } = Dimensions.get('window');
 import { useIsFocused } from '@react-navigation/native'
+import auth from '@react-native-firebase/auth';
 const Home = ({ navigation }) => {
     const [originalArray, setOriginalArray] = useState([]);
     const [searchedArray, setSearchedArray] = useState([]);
@@ -89,8 +90,8 @@ const Home = ({ navigation }) => {
         modifyItemsArray()
         setSelectedOrder([]);
     }, [isFocused])
+
     const modifyItemsArray = () => {
-        console.log('l');
         let newModifiedArray = []
         items.forEach((item) => {
             newModifiedArray.push({ ...item, isSelect: false, addedQuantity: 0 })
@@ -99,9 +100,22 @@ const Home = ({ navigation }) => {
         setOriginalArray(newModifiedArray);
         setSearchedArray(newModifiedArray);
     }
+    const logOut=()=>{
+        auth()
+        .signOut()
+        .then(() => console.log('User signed out!'));
+    }
     return (
         <View style={styles.container}>
-            <Text style={{ color: "#137EFF", fontWeight: "600", padding: 15, fontSize: 25, backgroundColor: "white", borderBottomRightRadius: 20, borderBottomLeftRadius: 20, elevation: 10 }}>Welcome ! User</Text>
+            <View style={{ padding: 15, backgroundColor: "white", borderBottomRightRadius: 20, borderBottomLeftRadius: 20, elevation: 10,flexDirection:"row",justifyContent:"space-between" }}>
+                <Text style={{color: "#137EFF", fontWeight: "600",fontSize: 25,}}>Welcome</Text>
+                <TouchableOpacity 
+                    onPress={logOut}
+                    style={styles.logOutButton}
+                >
+                    <Text style={{color: "#137EFF", fontWeight: "600", fontSize: 15,}}>LogOut</Text>
+                </TouchableOpacity>
+            </View>
             <View style={styles.inputContainer}>
                 <FontAwesome name='search' color={'#6BB5FF'} size={22} />
                 <TextInput style={{ color: "black", fontWeight: "bold" }} placeholder='Search...' placeholderTextColor={'black'} onChangeText={searchKey => searchData(searchKey)} />
@@ -230,6 +244,14 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         elevation: 5,
         borderRadius: 2
+    },
+    logOutButton:{
+        backgroundColor:"white",
+        elevation:5,
+        alignItems: 'center',
+        justifyContent: 'center',
+        width:100,
+        borderRadius:5
     }
 })
 export default Home;

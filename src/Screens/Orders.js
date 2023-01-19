@@ -6,12 +6,6 @@ function Orders() {
   const [allOrderArray, setallOrderArray] = useState([]);
   const [refreshing, setRefreshing] = React.useState(false);
 
-  const onRefresh = React.useCallback(() => {
-    setRefreshing(true);
-    setTimeout(() => {
-      setRefreshing(false);
-    }, 2000);
-  }, []);
   useEffect(() => {
     data();
   }, []);
@@ -57,7 +51,7 @@ function Orders() {
             </Text>
             <View style={{flexDirection:"row",justifyContent:"space-between",}}>
               <Text style={[styles.dynamicTextStyle,item.payment?{backgroundColor:"rgba(0,134,5,0.94)",}:{backgroundColor:"rgba(210,3,0,0.88)",}]}>
-                Payment {!item.payment?"Done":"Pending"}
+                Payment {item.payment?"Done":"Pending"}
               </Text>
               <Text style={[styles.dynamicTextStyle,item.prepared?{backgroundColor:"rgba(0,134,5,0.94)",}:{backgroundColor:"rgba(210,3,0,0.88)",}]}>
                 Order {item.prepared?"Done":"Pending"}

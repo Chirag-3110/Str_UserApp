@@ -5,6 +5,8 @@ const windowheight = Dimensions.get('window').height;
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Lottie from 'lottie-react-native';
 import styles from "./style";
+import auth from '@react-native-firebase/auth';
+
 const SignIn = ({navigation}) => {
 
     useEffect(() => {
@@ -29,7 +31,31 @@ const SignIn = ({navigation}) => {
             }).start();
         });
     }
-
+    const login=()=>{
+        try {
+            if(email==='')
+                throw "Enter email"
+            if(password==='')
+                throw "Enter Password"
+            setLoading(true)
+            auth().signInWithEmailAndPassword(email,password)
+            .catch((error)=>{
+                if (error.code === 'auth/invalid-email') {
+                    alert("Invalid Email")
+                }
+                if (error.code === 'auth/wrong-password') {
+                    alert("Incorrect Password")
+                }
+                if (error.code === 'auth/user-not-found') {
+                    alert("user not exists")
+                }
+                setLoading(false);
+            })       
+        } catch (error) {
+            setLoading(false);
+            alert(error);
+        }
+    }
     return (
         <View style={styles.container}>
             <View style={{ alignItems: "flex-start",justifyContent: 'center' }}>
@@ -100,7 +126,7 @@ const SignIn = ({navigation}) => {
                         Forgot Password ?
                     </Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.btnContainer}>
+                <TouchableOpacity style={styles.btnContainer} onPress={login}>
                     {
                         loading?
                         <ActivityIndicator color={'white'} size={30}/>:
