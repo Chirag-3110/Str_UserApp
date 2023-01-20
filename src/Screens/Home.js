@@ -138,15 +138,12 @@ const Home = ({ navigation }) => {
                                     <Text style={{ color: "#137EFF", fontWeight: "bold", textAlign: "left", fontSize: 13 }}>
                                         {item.name}
                                     </Text>
-                                    <View style={{ flexDirection: "row", justifyContent: "space-around", margin: 10 }}>
+                                    <View style={{ flexDirection: "row", justifyContent: "space-between", margin: 10 }}>
                                         <Text style={{ color: "#137EFF", fontWeight: "500", textAlign: "left", fontSize: 12 }}>
                                             {item.quantity}
                                         </Text>
                                         <Text style={{ color: "#137EFF", fontWeight: "500", textAlign: "left", fontSize: 12 }}>
-                                            for
-                                        </Text>
-                                        <Text style={{ color: "#137EFF", fontWeight: "500", textAlign: "left", fontSize: 12 }}>
-                                            {item.price}
+                                            {item.price} Rs
                                         </Text>
                                     </View>
                                 </View>
