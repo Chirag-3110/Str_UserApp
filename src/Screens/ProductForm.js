@@ -13,45 +13,42 @@ const ProductForm = ({ navigation, route }) => {
     const { finalProducts, totalAmt } = route.params;
     const [userSelectedOrders, setUsersSelectedOreders] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [email, setEmail] = useState(null);
     const [name, setName] = useState(null);
-    const [address, setAddress] = useState(null);
     const [phone, setPhone] = useState(null);
-    const [instruction, setInstruction] = useState(null);
-    const [allUsersToken,setAllUsersToken]=useState([])
+    const [allUsersToken, setAllUsersToken] = useState([])
     useEffect(() => {
         setUsersSelectedOreders(finalProducts)
         getFcmToken()
         getAllUsers()
     }, [])
-    const getAllUsers=()=>{
+    const getAllUsers = () => {
         firestore().collection('Users').get()
-        .then(querySnapShot=>{
-            const user=querySnapShot._docs.map((token)=>{
-                return token._data.UserFcmToken
+            .then(querySnapShot => {
+                const user = querySnapShot._docs.map((token) => {
+                    return token._data.UserFcmToken
+                })
+                setAllUsersToken(user)
             })
-            setAllUsersToken(user)
-        })
-        .catch((e)=>{
-            console.log(e);
-        })
+            .catch((e) => {
+                console.log(e);
+            })
     }
-    const notificationHandler=()=>{
-        fetch('http://192.168.182.30:8000/triggerNotification',{
-            method:"POST",
-            headers:{
-                'Content-Type':"application/json"
+    const notificationHandler = () => {
+        fetch('https://ordermanagementnotification-production.up.railway.app/triggerNotification', {
+            method: "POST",
+            headers: {
+                'Content-Type': "application/json"
             },
-            body:JSON.stringify({
-                tokens:allUsersToken,
-                notificationBody:"New Order is recieved"
+            body: JSON.stringify({
+                tokens: allUsersToken,
+                notificationBody: "New Order is recieved"
             })
         })
-        .then((res)=>res.json())
-        .then((data)=>console.log(data.message))
-        .catch((e)=>{
-            console.log(e);
-        })
+            .then((res) => res.json())
+            .then((data) => console.log(data.message))
+            .catch((e) => {
+                console.log(e);
+            })
     }
     const getFcmToken = async () => {
         const cloudToken = await AsyncStorage.getItem("fcmtoken");
@@ -59,16 +56,8 @@ const ProductForm = ({ navigation, route }) => {
     }
     const checkForDetails = () => {
         try {
-            if (email === null)
-                throw "Please enter email";
             if (name === null)
                 throw "Please enter name";
-            if (address === null)
-                throw "Please enter address";
-            if (phone === null)
-                throw "Please enter phone";
-            if (instruction === null)
-                throw "Please enter instruction";
             placeOrderForConfirmation()
         } catch (error) {
             alert(error);
@@ -87,7 +76,7 @@ const ProductForm = ({ navigation, route }) => {
             storeNumber: "1",
             name: name,
             phone: phone,
-            address: address,
+            address: "no address",
             order: finalArrayProducts,
             totalAmount: totalAmt,
             FCM_Token: fcmToken
@@ -104,8 +93,11 @@ const ProductForm = ({ navigation, route }) => {
             })
                 .then((res) => res.json())
                 .then((response) => {
+                    console.log(response)
                     notificationHandler();
+                    navigation.navigate("OrderConfirm")
                     setLoading(false)
+
                 })
                 .catch((e) => {
                     console.log(e);
@@ -120,28 +112,13 @@ const ProductForm = ({ navigation, route }) => {
         <ScrollView style={styles.body}>
             <Text style={styles.heading}>Enter Details</Text>
             <View style={styles.form}>
-                <Text style={styles.label}>Email</Text>
-                <View style={styles.container}>
-                    <MaterialCommunityIcons name='email' color={'#28CDA9'} size={22} />
-                    <TextInput style={{ marginLeft: 7, color: "black" }} placeholderTextColor="black" placeholder='Email'
-                        onChangeText={email => setEmail(email)}
-                    />
-                </View>
+
                 <View style={{ marginVertical: 10, }}>
                     <Text style={styles.label}>Name</Text>
                     <View style={styles.container}>
                         <Ionicons name='person' color={'#28CDA9'} size={22} />
                         <TextInput style={{ marginLeft: 7, color: "black" }} placeholderTextColor="black" placeholder='Name'
                             onChangeText={name => setName(name)}
-                        />
-                    </View>
-                </View>
-                <View style={{ marginVertical: 10 }}>
-                    <Text style={styles.label}>Address</Text>
-                    <View style={styles.container}>
-                        <Ionicons name='ios-location-sharp' color={'#28CDA9'} size={22} />
-                        <TextInput style={{ marginLeft: 7, color: "black" }} placeholderTextColor="black" placeholder='Address'
-                            onChangeText={address => setAddress(address)}
                         />
                     </View>
                 </View>
@@ -157,15 +134,7 @@ const ProductForm = ({ navigation, route }) => {
                     </View>
                 </View>
 
-                <View style={{ marginVertical: 10 }}>
-                    <Text style={styles.label}>Preparation Instructions</Text>
-                    <View style={styles.container}>
-                        <Ionicons name='basket-sharp' color={'#28CDA9'} size={22} />
-                        <TextInput style={{ marginLeft: 7, color: "black" }} placeholderTextColor="black" placeholder='Preparation Instructions'
-                            onChangeText={instruction => setInstruction(instruction)}
-                        />
-                    </View>
-                </View>
+
 
             </View>
 
@@ -225,7 +194,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         borderRadius: 8,
-        marginBottom:40
+        marginBottom: 40
     },
     submittext: {
         fontSize: 16,

@@ -34,7 +34,7 @@ const ProductDetials = ({ route, navigation }) => {
         setTotalPriceFinal(lastAmount)
     }
     const DeleteItem = (id) => {
-        if(finalArray.length===1){
+        if (finalArray.length === 1) {
             navigation.navigate("Home")
             return;
         }
@@ -58,7 +58,7 @@ const ProductDetials = ({ route, navigation }) => {
                 {
                     finalArray.map((item, index) => (
                         <>
-                            <View key={index} style={styles.ProInfoBox}>
+                            <View key={item.id} style={styles.ProInfoBox}>
                                 <Image source={{ uri: item.image }} style={styles.ProImage} />
                                 <View style={styles.ProductDescPrice}>
                                     <Text style={styles.DescText}>{item.name}-{item.addedQuantity}</Text>

@@ -1,4 +1,4 @@
-import { StyleSheet,Dimensions } from "react-native";
+import { StyleSheet, Dimensions } from "react-native";
 const windowWidth = Dimensions.get('window').width;
 const windowheight = Dimensions.get('window').height;
 
@@ -7,14 +7,14 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: 'center',
-        backgroundColor:"white",
+        backgroundColor: "white",
         // paddingVertical:15
     },
     MainText: {
         color: "black",
         fontWeight: "bold",
         fontSize: 40,
-        marginLeft:25,
+        marginLeft: 25,
     },
     subText: {
         color: "#5B5B5B",
@@ -45,8 +45,8 @@ const styles = StyleSheet.create({
         height: 50,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: "#1D0EFE",
-        borderRadius:10,
+        backgroundColor: "#28CDA9",
+        borderRadius: 10,
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 50,
-        marginTop:10
+        marginTop: 10
     },
     btnText: {
         fontWeight: "bold",

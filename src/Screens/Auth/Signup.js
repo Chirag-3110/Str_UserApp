@@ -11,19 +11,19 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SignUp = ({ navigation }) => {
 
-    const [loading,setLoading]=useState(false)
+    const [loading, setLoading] = useState(false)
     const [email, setemail] = useState('')
     const [password, setpassword] = useState('');
     const [Cpassword, setCpassword] = useState('');
     const [showPassword, setShowPassword] = useState(true);
-    const [userFcmToken,setUserFcmToken]=useState(null);
+    const [userFcmToken, setUserFcmToken] = useState(null);
     useEffect(() => {
         showPopUp();
         getFcmToken()
-        
+
     }, [])
-    const getFcmToken=async()=>{
-        let fcmtoken=await AsyncStorage.getItem("fcmtoken");
+    const getFcmToken = async () => {
+        let fcmtoken = await AsyncStorage.getItem("fcmtoken");
         console.log(fcmtoken);
         setUserFcmToken(fcmtoken)
     }
@@ -43,38 +43,38 @@ const SignUp = ({ navigation }) => {
             }).start();
         });
     }
-    const SignUp=()=>{
+    const SignUp = () => {
         try {
-            if(email==='')
+            if (email === '')
                 throw "Enter email"
-            if(password==='')
+            if (password === '')
                 throw "Enter Password"
-            if(password!==Cpassword)
+            if (password !== Cpassword)
                 throw "Password must be same"
             setLoading(true)
             auth()
-            .createUserWithEmailAndPassword(email,password)
-            .then((userCredential) => {
-                var user = userCredential.user;
-                firestore().collection('Users').doc(user.uid).set({
-                    UserFcmToken:userFcmToken 
+                .createUserWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    var user = userCredential.user;
+                    firestore().collection('Users').doc(user.uid).set({
+                        UserFcmToken: userFcmToken
+                    })
+                        .then(() => {
+                            console.log('User added!');
+                            setLoading(false)
+                        });
                 })
-                .then(() => {
-                    console.log('User added!');
+                .catch(error => {
+                    if (error.code === 'auth/email-already-in-use') {
+                        console.log('That email address is already in use!');
+                    }
+
+                    if (error.code === 'auth/invalid-email') {
+                        console.log('That email address is invalid!');
+                    }
                     setLoading(false)
+                    // console.error(error);
                 });
-            })
-            .catch(error => {
-                if (error.code === 'auth/email-already-in-use') {
-                console.log('That email address is already in use!');
-                }
-            
-                if (error.code === 'auth/invalid-email') {
-                console.log('That email address is invalid!');
-                }
-                setLoading(false)
-                // console.error(error);
-            });
         } catch (error) {
             alert(error);
         }
@@ -116,7 +116,7 @@ const SignUp = ({ navigation }) => {
                     >
                         <FontAwesome name="user" size={25} color={"grey"} />
                         <TextInput
-                            style={{ flex: 1, fontWeight: "bold", fontSize: 15, color: "black", paddingLeft: 10,fontFamily:"SourceSansPro-Bold"}}
+                            style={{ flex: 1, fontWeight: "bold", fontSize: 15, color: "black", paddingLeft: 10, fontFamily: "SourceSansPro-Bold" }}
                             placeholder="Email"
                             placeholderTextColor={"grey"}
                             onChangeText={value => { setemail(value) }}
@@ -131,7 +131,7 @@ const SignUp = ({ navigation }) => {
                     >
                         <FontAwesome name="lock" size={25} color={"grey"} />
                         <TextInput
-                            style={{ flex: 1, fontWeight: "bold", fontSize: 15, color: "black", paddingLeft: 10,fontFamily:"SourceSansPro-Bold" }}
+                            style={{ flex: 1, fontWeight: "bold", fontSize: 15, color: "black", paddingLeft: 10, fontFamily: "SourceSansPro-Bold" }}
                             placeholder={"Password"}
                             placeholderTextColor={"grey"}
                             secureTextEntry={showPassword}
@@ -141,8 +141,8 @@ const SignUp = ({ navigation }) => {
                         <TouchableOpacity onPress={() => setShowPassword(!showPassword)} >
                             {
                                 showPassword ?
-                                <FontAwesome name="eye" size={25} color={"grey"} /> :
-                                <FontAwesome name="eye-slash" size={25} color={"grey"} />
+                                    <FontAwesome name="eye" size={25} color={"grey"} /> :
+                                    <FontAwesome name="eye-slash" size={25} color={"grey"} />
                             }
                         </TouchableOpacity>
                     </View>
@@ -155,7 +155,7 @@ const SignUp = ({ navigation }) => {
                     >
                         <FontAwesome name="lock" size={25} color={"grey"} />
                         <TextInput
-                            style={{ flex: 1, fontWeight: "bold", fontSize: 15, color: "black", paddingLeft: 10,fontFamily:"SourceSansPro-Bold" }}
+                            style={{ flex: 1, fontWeight: "bold", fontSize: 15, color: "black", paddingLeft: 10, fontFamily: "SourceSansPro-Bold" }}
                             placeholder={"Confirm Password"}
                             placeholderTextColor={"grey"}
                             secureTextEntry={showPassword}
@@ -166,16 +166,16 @@ const SignUp = ({ navigation }) => {
                 </View>
                 <TouchableOpacity style={styles.btnContainer}>
                     {
-                        loading?
-                        <ActivityIndicator size={25} color={"white"}/>:
-                        <Text style={[styles.btnText,{fontFamily:"SourceSansPro-Bold"}]} onPress={SignUp}>
-                            Create Account
-                        </Text>
+                        loading ?
+                            <ActivityIndicator size={25} color={"white"} /> :
+                            <Text style={[styles.btnText, { fontFamily: "SourceSansPro-Bold" }]} onPress={SignUp}>
+                                Create Account
+                            </Text>
                     }
                 </TouchableOpacity>
                 <View style={styles.bottomText}>
-                    <Text style={[styles.subText, { color: "black", fontWeight: "bold", marginRight: 10,fontFamily:"SourceSansPro-Bold" }]}>Already have an account?</Text>
-                    <Text style={[styles.subText, { color: "blue", fontWeight: "bold" ,fontFamily:"SourceSansPro-Bold"}]} onPress={() => navigation.navigate("login")}>Log In</Text>
+                    <Text style={[styles.subText, { color: "black", fontWeight: "bold", marginRight: 10, fontFamily: "SourceSansPro-Bold" }]}>Already have an account?</Text>
+                    <Text style={[styles.subText, { color: "#28CDA9", fontWeight: "bold", fontFamily: "SourceSansPro-Bold" }]} onPress={() => navigation.navigate("login")}>Log In</Text>
                 </View>
             </View>
         </View>

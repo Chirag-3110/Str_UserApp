@@ -1,13 +1,13 @@
 // In App.js in a new project
 
-import React ,{useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import ProductDetials from './src/Screens/ProductDetails';
 import ProductForm from './src/Screens/ProductForm';
 import OrderConfirm from './src/Screens/OrderConfirm';
 import Splash from './src/Screens/Splash';
-import { requestUserPermission,NotificationListner } from './src/utils/Notifications';
+import { requestUserPermission, NotificationListner } from './src/utils/Notifications';
 import Bottomtab from './navigators/Bottomtab';
 import InternetCheck from './src/utils/InternetError';
 import SignIn from './src/Screens/Auth/Login';
@@ -19,10 +19,10 @@ const Stack = createNativeStackNavigator();
 
 function App() {
 
-  useEffect(()=>{
+  useEffect(() => {
     requestUserPermission()
     NotificationListner()
-  },[])
+  }, [])
   const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useState();
 
@@ -34,34 +34,34 @@ function App() {
 
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-    return subscriber; 
+    return subscriber;
   }, []);
 
   return (
     <>
-     <NavigationContainer>
+      <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="login">
-            {
-              user==null?
+          {
+            user == null ?
               <>
                 {/* <Stack.Screen name="Splash" component={Splash} /> */}
                 <Stack.Screen name="login" component={SignIn} />
                 <Stack.Screen name="signup" component={SignUp} />
                 <Stack.Screen name="forgotpass" component={ForgotPass} />
               </>
-                :
+              :
               <>
-                <Stack.Screen name="bottomtab" component={Bottomtab}/>
+                <Stack.Screen name="bottomtab" component={Bottomtab} />
                 <Stack.Screen name="ProductDetials" component={ProductDetials} />
                 <Stack.Screen name="ProductForm" component={ProductForm} />
                 <Stack.Screen name="OrderConfirm" component={OrderConfirm} />
               </>
-            }
-          </Stack.Navigator>
+          }
+        </Stack.Navigator>
       </NavigationContainer>
-      <InternetCheck/>
-     </>
-  
+      <InternetCheck />
+    </>
+
   );
 }
 
