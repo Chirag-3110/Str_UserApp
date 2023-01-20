@@ -7,6 +7,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import firestore from '@react-native-firebase/firestore';
+import messaging from '@react-native-firebase/messaging';
 
 const ProductForm = ({ navigation, route }) => {
     const [fcmToken, setfcmToken] = useState(null);
@@ -44,15 +45,19 @@ const ProductForm = ({ navigation, route }) => {
                 notificationBody: "New Order is recieved"
             })
         })
-            .then((res) => res.json())
-            .then((data) => console.log(data.message))
-            .catch((e) => {
-                console.log(e);
-            })
+        .then((res) => res.json())
+        .then((data) => {
+            console.log(data);
+            navigation.navigate("OrderConfirm")
+            setLoading(false)
+        })
+        .catch((e) => {
+            console.log(e);
+        })
     }
     const getFcmToken = async () => {
-        const cloudToken = await AsyncStorage.getItem("fcmtoken");
-        setfcmToken(cloudToken)
+        let FCMToken=await messaging().getToken();
+        setfcmToken(FCMToken)
     }
     const checkForDetails = () => {
         try {
@@ -81,32 +86,25 @@ const ProductForm = ({ navigation, route }) => {
             totalAmount: totalAmt,
             FCM_Token: fcmToken
         }
-        try {
-            setLoading(true);
-            fetch("https://ordermanagementserver-production.up.railway.app/orderTaken", {
-                method: "POST",
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(orderData)
-            })
-                .then((res) => res.json())
-                .then((response) => {
-                    console.log(response)
-                    notificationHandler();
-                    navigation.navigate("OrderConfirm")
-                    setLoading(false)
+        setLoading(true);
+        fetch("https://ordermanagementserver-production.up.railway.app/orderTaken", {
+            method: "POST",
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(orderData)
+        })
+        .then((res) => res.json())
+        .then((response) => {
+            console.log('res',response)
+            notificationHandler();
 
-                })
-                .catch((e) => {
-                    console.log(e);
-                    setLoading(false)
-                })
-        } catch (error) {
-            console.log(error);
+        })
+        .catch((e) => {
+            console.log(e);
             setLoading(false)
-        }
+        })
     }
     return (
         <ScrollView style={styles.body}>

@@ -7,7 +7,7 @@ import styles from "./style";
 import Lottie from 'lottie-react-native';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import messaging from '@react-native-firebase/messaging';
 
 const SignUp = ({ navigation }) => {
 
@@ -23,9 +23,9 @@ const SignUp = ({ navigation }) => {
 
     }, [])
     const getFcmToken = async () => {
-        let fcmtoken = await AsyncStorage.getItem("fcmtoken");
-        console.log(fcmtoken);
-        setUserFcmToken(fcmtoken)
+        let FCMToken=await messaging().getToken();
+        console.log(FCMToken);
+        setUserFcmToken(FCMToken)
     }
 
     const position = new Animated.ValueXY({ x: 0, y: -windowheight });

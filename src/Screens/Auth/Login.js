@@ -39,18 +39,19 @@ const SignIn = ({ navigation }) => {
                 throw "Enter Password"
             setLoading(true)
             auth().signInWithEmailAndPassword(email, password)
-                .catch((error) => {
-                    if (error.code === 'auth/invalid-email') {
-                        alert("Invalid Email")
-                    }
-                    if (error.code === 'auth/wrong-password') {
-                        alert("Incorrect Password")
-                    }
-                    if (error.code === 'auth/user-not-found') {
-                        alert("user not exists")
-                    }
-                    setLoading(false);
-                })
+            .catch((error) => {
+                if (error.code === 'auth/invalid-email') {
+                    alert("Invalid Email")
+                }
+                if (error.code === 'auth/wrong-password') {
+                    alert("Incorrect Password")
+                }
+                if (error.code === 'auth/user-not-found') {
+                    alert("user not exists")
+                }
+                console.log(error);
+                setLoading(false);
+            })
         } catch (error) {
             setLoading(false);
             alert(error);
