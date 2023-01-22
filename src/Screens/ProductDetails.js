@@ -24,12 +24,23 @@ const ProductDetials = ({ route, navigation }) => {
         console.log("i am called in calc")
         for (i = 0; i < finalArray.length; i++) {
             // console.log(finalArray[i])
-            IntegerAmount1 = parseInt(finalArray[i].addedQuantity)
-            console.log(IntegerAmount1, "I am quanitty");
+            if (finalArray[i].isHalfSelected == false) {
 
-            IntegerAmount = parseInt(finalArray[i].price)
-            console.log("IntAMourt", IntegerAmount)
-            TP = TP + (IntegerAmount * IntegerAmount1);
+                IntegerAmount1 = parseInt(finalArray[i].addedQuantity)
+                console.log(IntegerAmount1, "I am quanitty");
+
+                IntegerAmount = parseInt(finalArray[i].fullprice)
+                console.log("IntAMourt", IntegerAmount)
+                TP = TP + (IntegerAmount * IntegerAmount1);
+            }
+            else {
+                IntegerAmount1 = parseInt(finalArray[i].addedQuantity)
+                console.log(IntegerAmount1, "I am quanitty");
+
+                IntegerAmount = parseInt(finalArray[i].halfPrice)
+                console.log("IntAMourt", IntegerAmount)
+                TP = TP + (IntegerAmount * IntegerAmount1);
+            }
         }
         const lastAmount = TP
         setTotalPriceFinal(lastAmount)
@@ -43,10 +54,22 @@ const ProductDetials = ({ route, navigation }) => {
         // console.log("i am hello", newArr)
         setfinalArray(newArr)
         for (i = 0; i < newArr.length; i++) {
-            IntegerAmount = parseInt(newArr[i].price)
-            console.log("IntAMourt", IntegerAmount)
-            TP = TP + IntegerAmount
+            console.log("i am newArr", newArr)
+            if (newArr[i].isHalfSelected == false) {
+
+                IntegerAmount = parseInt(newArr[i].fullprice)
+                console.log("i AM FULL PRICE", IntegerAmount)
+                console.log("IntAMourt", IntegerAmount)
+                TP = TP + IntegerAmount
+            }
+            else {
+                IntegerAmount = parseInt(newArr[i].halfPrice)
+                // console.log("IntAMourt", IntegerAmount)
+                console.log("i AM HALF PRICE", IntegerAmount)
+                TP = TP + IntegerAmount
+            }
         }
+        console.log("i am the tp", TP);
         const lastAmount = TP
         setTotalPriceFinal(lastAmount)
     }
@@ -63,7 +86,7 @@ const ProductDetials = ({ route, navigation }) => {
                                 <Image source={{ uri: item.image }} style={styles.ProImage} />
                                 <View style={styles.ProductDescPrice}>
                                     <Text style={styles.DescText}>{item.name}-{item.addedQuantity}</Text>
-                                    <Text style={styles.PriceText}>Price : {item.price}</Text>
+                                    <Text style={styles.PriceText}>Price : {item.isHalfSelected == false ? item.fullprice : item.halfPrice}</Text>
                                 </View>
                                 <View style={styles.QuantityView}>
                                     <View style={[styles.MainPSView, { justifyContent: "center", alignItems: "center", backgroundColor: "#28CDA9" }]}>
