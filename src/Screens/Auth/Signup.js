@@ -55,14 +55,14 @@ const SignUp = ({ navigation }) => {
             auth()
                 .createUserWithEmailAndPassword(email, password)
                 .then((userCredential) => {
-                    var user = userCredential.user;
+                var user = userCredential.user;
                     firestore().collection('Users').doc(user.uid).set({
                         UserFcmToken: userFcmToken
                     })
-                        .then(() => {
-                            console.log('User added!');
-                            setLoading(false)
-                        });
+                    .then(() => {
+                        console.log('User added!');
+                        setLoading(false)
+                    });
                 })
                 .catch(error => {
                     if (error.code === 'auth/email-already-in-use') {

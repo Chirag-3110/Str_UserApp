@@ -8,6 +8,7 @@ const ProductDetials = ({ route, navigation }) => {
     const [finalArray, setfinalArray] = useState([])
     let TP = 0;
     useEffect(() => {
+        console.log(selectedOrderArray);
         finalArray.push(...selectedOrderArray)
         CalCuTotalPrice();
     }, [])

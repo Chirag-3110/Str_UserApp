@@ -1,6 +1,6 @@
 // In App.js in a new project
 
-import React, { useEffect, useState } from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import ProductDetials from './src/Screens/ProductDetails';
@@ -16,7 +16,7 @@ import ForgotPass from './src/Screens/Auth/forgotPass';
 import auth from '@react-native-firebase/auth';
 
 const Stack = createNativeStackNavigator();
-
+export const GlobalVariable=createContext();
 function App() {
 
   useEffect(() => {
@@ -39,26 +39,32 @@ function App() {
 
   return (
     <>
+      <GlobalVariable.Provider
+        value={{
+          userId:user
+        }}
+      >
       <NavigationContainer>
-        <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="login">
-          {
-            user == null ?
-              <>
-                {/* <Stack.Screen name="Splash" component={Splash} /> */}
-                <Stack.Screen name="login" component={SignIn} />
-                <Stack.Screen name="signup" component={SignUp} />
-                <Stack.Screen name="forgotpass" component={ForgotPass} />
-              </>
-              :
-              <>
-                <Stack.Screen name="bottomtab" component={Bottomtab} />
-                <Stack.Screen name="ProductDetials" component={ProductDetials} />
-                <Stack.Screen name="ProductForm" component={ProductForm} />
-                <Stack.Screen name="OrderConfirm" component={OrderConfirm} />
-              </>
-          }
-        </Stack.Navigator>
-      </NavigationContainer>
+          <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="login">
+            {
+              user == null ?
+                <>
+                  {/* <Stack.Screen name="Splash" component={Splash} /> */}
+                  <Stack.Screen name="login" component={SignIn} />
+                  <Stack.Screen name="signup" component={SignUp} />
+                  <Stack.Screen name="forgotpass" component={ForgotPass} />
+                </>
+                :
+                <>
+                  <Stack.Screen name="bottomtab" component={Bottomtab} />
+                  <Stack.Screen name="ProductDetials" component={ProductDetials} />
+                  <Stack.Screen name="ProductForm" component={ProductForm} />
+                  <Stack.Screen name="OrderConfirm" component={OrderConfirm} />
+                </>
+            }
+          </Stack.Navigator>
+        </NavigationContainer>
+      </GlobalVariable.Provider>
       <InternetCheck />
     </>
 

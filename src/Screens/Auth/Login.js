@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useContext, } from "react";
 import { View, Text, StyleSheet, TextInput, Dimensions, TouchableOpacity, Image, ScrollView, Animated, ActivityIndicator } from 'react-native';
 const windowWidth = Dimensions.get('window').width;
 const windowheight = Dimensions.get('window').height;
@@ -7,8 +7,9 @@ import Lottie from 'lottie-react-native';
 import styles from "./style";
 import auth from '@react-native-firebase/auth';
 
-const SignIn = ({ navigation }) => {
 
+const SignIn = ({ navigation }) => {
+    const [userFcmToken, setUserFcmToken] = useState(null);
     useEffect(() => {
         showPopUp();
     }, [])
