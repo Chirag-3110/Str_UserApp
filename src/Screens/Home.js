@@ -21,19 +21,20 @@ import HomeHeader from '../components/HomeHeader';
 import ContinueButtonHome from '../components/ContinueButtonHome';
 import styles from '../styles/HomeStyle';
 const { width, height } = Dimensions.get('window');
+import Lottie from 'lottie-react-native';
 
 
 const Home = ({ navigation }) => {
-    const {userId}=useContext(GlobalVariable)
+    const { userId } = useContext(GlobalVariable)
     const [originalArray, setOriginalArray] = useState([]);
     const [searchedArray, setSearchedArray] = useState([]);
     const [search, setSearch] = useState("");
     const [selectedOrder, setSelectedOrder] = useState([]);
     let [numberOfItems, setNumberOfItems] = useState(null);
-    const [showModal,setShowModal]=useState(false);
-    const [selectedFoodObject,setSelectedFoodObject]=useState('');
-    const [selectedIndex,setSelectedIndex]=useState('')
-    const [selectedQuatntitType,setSelectedQuantityType]=useState('full')
+    const [showModal, setShowModal] = useState(false);
+    const [selectedFoodObject, setSelectedFoodObject] = useState('');
+    const [selectedIndex, setSelectedIndex] = useState('')
+    const [selectedQuatntitType, setSelectedQuantityType] = useState('full')
     const isFocused = useIsFocused()
     const searchData = (searchItem) => {
         setSearch(searchItem);
@@ -50,15 +51,15 @@ const Home = ({ navigation }) => {
         }
     };
 
-    const handleHalfFull=(item,index)=>{
-        if(!item.isSelect && item.isHalf){
+    const handleHalfFull = (item, index) => {
+        if (!item.isSelect && item.isHalf) {
             setShowModal(true);
             setSelectedFoodObject(item)
             setSelectedIndex(index)
         }
     }
-    const manageHalyFullPlates=(quantityString)=>{
-        if(quantityString==='half'){
+    const manageHalyFullPlates = (quantityString) => {
+        if (quantityString === 'half') {
             setSelectedQuantityType('half');
             setSearchedArray((item) => {
                 item[selectedIndex].showIsHalf = true;
@@ -131,65 +132,67 @@ const Home = ({ navigation }) => {
         setSelectedOrder([]);
         updateFCMToken();
     }, [isFocused])
-    const updateFCMToken=async()=>{
-        let FCMToken=await messaging().getToken();
+    const updateFCMToken = async () => {
+        let FCMToken = await messaging().getToken();
         firestore().collection('Users').doc(userId.uid).update({
             UserFcmToken: FCMToken
         })
     }
 
-    const getAllFoodItems=()=>{
+    const getAllFoodItems = () => {
         fetch("https://ordermanagementserver-production.up.railway.app/getfood")
-        .then((res)=>res.json())
-        .then((data)=>{
-            modifyItemsArray(data)
-        })
-        .catch((e)=>{
-            console.log(e);
-        })
+            .then((res) => res.json())
+            .then((data) => {
+                modifyItemsArray(data)
+            })
+            .catch((e) => {
+                console.log(e);
+            })
     }
     const modifyItemsArray = (items) => {
         let newModifiedArray = []
         items.forEach((item) => {
-            newModifiedArray.push({ ...item, isSelect: false, addedQuantity: 0 ,showIsHalf:false})
+            newModifiedArray.push({ ...item, isSelect: false, addedQuantity: 0, showIsHalf: false })
         })
         setNumberOfItems(null)
         setOriginalArray(newModifiedArray);
         setSearchedArray(newModifiedArray);
     }
-    const convertData=(foodItemsArray)=>{
-        let newItemArray=[];
-        foodItemsArray.forEach((items)=>{
+    const convertData = (foodItemsArray) => {
+        let newItemArray = [];
+        foodItemsArray.forEach((items) => {
             newItemArray.push({
-                id:items._id,
-                name:items.foodName,
-                isHalfSelected:items.showIsHalf,
-                halfQuantity:items.halfQaunt,
-                halfPrice:items.halfPrice,
-                fullprice:items.fullPrice,
-                fullQuantity:items.fullQuant,
-                addedQuantity:items.addedQuantity
+                id: items._id,
+                name: items.foodName,
+                isHalfSelected: items.showIsHalf,
+                halfQuantity: items.halfQaunt,
+                halfPrice: items.halfPrice,
+                fullprice: items.fullPrice,
+                fullQuantity: items.fullQuant,
+                addedQuantity: items.addedQuantity
             })
         })
         navigation.navigate("ProductDetials", { selectedOrderArray: newItemArray });
     }
     return (
         <View style={styles.container}>
-            <HomeHeader/>
+            <HomeHeader />
             <View style={styles.inputContainer}>
                 <FontAwesome name='search' color={'#6BB5FF'} size={22} />
                 <TextInput style={{ color: "black", fontWeight: "bold" }} placeholder='Search...' placeholderTextColor={'black'} onChangeText={searchKey => searchData(searchKey)} />
             </View>
             <Text style={{ color: "#137EFF", fontWeight: "bold", textAlign: "left", fontSize: 25, paddingHorizontal: 10 }}>
-                All Orders
+                All Items
             </Text>
             {
-                searchedArray.length === 0 ? null :
+                searchedArray.length === 0 ? <View style={{ width: width, height: height, justifyContent: "center", alignItems: "center", backgroundColor: "white" }}>
+                    <Lottie source={require('../lottieFiles/59301-burger-loader.json')} autoPlay loop style={{ width: width, height: 400, }} />
+                </View> :
                     <FlatList
                         numColumns={2}
                         data={searchedArray}
                         renderItem={({ item, index }) => (
-                            <FoodCard 
+                            <FoodCard
                                 foodItem={item}
                                 itemIndex={index}
                                 setAddedListen={handleHalfFull}
@@ -202,71 +205,71 @@ const Home = ({ navigation }) => {
                             <Modal visible={showModal} animationType='slide' transparent={true}>
                                 <View style={styles.modeOuter}>
                                     <View style={styles.innnerModel}>
-                                    <TouchableOpacity style={styles.modalCloseButton} onPress={()=>{
-                                        manageHalyFullPlates('full')
-                                        setShowModal(false)
-                                    }}>
-                                        <FontAwesome name='close' color={'#6BB5FF'} size={22} />
-                                    </TouchableOpacity>
-                                    <View style={{flexDirection: 'row',justifyContent:"space-evenly",alignItems: 'center',width: '100%',marginVertical:20}}>
-                                        <TouchableOpacity 
-                                            onPress={()=>manageHalyFullPlates("half")}
-                                            style={[
-                                                {elevation:10,padding:15,borderRadius:10},
-                                                selectedQuatntitType==='half'?{backgroundColor:'#28CDA9'}:{backgroundColor:'white'}
-                                            ]}
-                                        > 
-                                            <Text style={[
-                                                {fontWeight:"bold",fontSize:25},
-                                                selectedQuatntitType==='half'?{color:'white'}:{color:"black"}
-                                            ]}>
-                                                Half
-                                            </Text>
-                                            <Text style={[
-                                                {fontWeight:"bold",fontSize:15},
-                                                selectedQuatntitType==='half'?{color:'white'}:{color:"black"}
-                                            ]}>
-                                                {selectedFoodObject.halfPrice} Rs
-                                            </Text>
-                                            <Text style={[
-                                                {fontWeight:"bold",fontSize:15},
-                                                selectedQuatntitType==='half'?{color:'white'}:{color:"black"}
-                                            ]}>
-                                                {selectedFoodObject.halfQaunt}
-                                            </Text>
+                                        <TouchableOpacity style={styles.modalCloseButton} onPress={() => {
+                                            manageHalyFullPlates('full')
+                                            setShowModal(false)
+                                        }}>
+                                            <FontAwesome name='close' color={'#6BB5FF'} size={22} />
                                         </TouchableOpacity>
-                                        <Text style={{color:"black",fontWeight:"bold"}}>Select Quantity</Text>
-                                        <TouchableOpacity 
-                                            onPress={()=>manageHalyFullPlates("full")}
-                                            style={[
-                                                {elevation:10,padding:15,borderRadius:10},
-                                                selectedQuatntitType==='full'?{backgroundColor:'#28CDA9'}:{backgroundColor:"white"}
-                                            ]}
-                                        >
-                                            <Text style={[
-                                                {fontWeight:"bold",fontSize:25},
-                                                selectedQuatntitType==='full'?{color:'white'}:{color:'black'}
-                                            ]}>
-                                                Full
-                                            </Text>
-                                            <Text style={[
-                                                {fontWeight:"bold",fontSize:15},
-                                                selectedQuatntitType==='full'?{color:'white'}:{color:'black'}
-                                            ]}>
-                                                {selectedFoodObject.fullPrice} Rs
-                                            </Text>
-                                            <Text style={[
-                                                {fontWeight:"bold",fontSize:15},
-                                                selectedQuatntitType==='full'?{color:'white'}:{color:'black'}
-                                            ]}>
-                                                {selectedFoodObject.fullQuant}
-                                            </Text>
-                                        </TouchableOpacity>
-                                    </View>
-                                    <ContinueButtonHome
-                                        title={"Continue..."}
-                                        onpress={()=>addedItems(selectedFoodObject, selectedIndex)}
-                                    />
+                                        <View style={{ flexDirection: 'row', justifyContent: "space-evenly", alignItems: 'center', width: '100%', marginVertical: 20 }}>
+                                            <TouchableOpacity
+                                                onPress={() => manageHalyFullPlates("half")}
+                                                style={[
+                                                    { elevation: 10, padding: 15, borderRadius: 10 },
+                                                    selectedQuatntitType === 'half' ? { backgroundColor: '#28CDA9' } : { backgroundColor: 'white' }
+                                                ]}
+                                            >
+                                                <Text style={[
+                                                    { fontWeight: "bold", fontSize: 25 },
+                                                    selectedQuatntitType === 'half' ? { color: 'white' } : { color: "black" }
+                                                ]}>
+                                                    Half
+                                                </Text>
+                                                <Text style={[
+                                                    { fontWeight: "bold", fontSize: 15 },
+                                                    selectedQuatntitType === 'half' ? { color: 'white' } : { color: "black" }
+                                                ]}>
+                                                    {selectedFoodObject.halfPrice} Rs
+                                                </Text>
+                                                <Text style={[
+                                                    { fontWeight: "bold", fontSize: 15 },
+                                                    selectedQuatntitType === 'half' ? { color: 'white' } : { color: "black" }
+                                                ]}>
+                                                    {selectedFoodObject.halfQaunt}
+                                                </Text>
+                                            </TouchableOpacity>
+                                            <Text style={{ color: "black", fontWeight: "bold" }}>Select Quantity</Text>
+                                            <TouchableOpacity
+                                                onPress={() => manageHalyFullPlates("full")}
+                                                style={[
+                                                    { elevation: 10, padding: 15, borderRadius: 10 },
+                                                    selectedQuatntitType === 'full' ? { backgroundColor: '#28CDA9' } : { backgroundColor: "white" }
+                                                ]}
+                                            >
+                                                <Text style={[
+                                                    { fontWeight: "bold", fontSize: 25 },
+                                                    selectedQuatntitType === 'full' ? { color: 'white' } : { color: 'black' }
+                                                ]}>
+                                                    Full
+                                                </Text>
+                                                <Text style={[
+                                                    { fontWeight: "bold", fontSize: 15 },
+                                                    selectedQuatntitType === 'full' ? { color: 'white' } : { color: 'black' }
+                                                ]}>
+                                                    {selectedFoodObject.fullPrice} Rs
+                                                </Text>
+                                                <Text style={[
+                                                    { fontWeight: "bold", fontSize: 15 },
+                                                    selectedQuatntitType === 'full' ? { color: 'white' } : { color: 'black' }
+                                                ]}>
+                                                    {selectedFoodObject.fullQuant}
+                                                </Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                        <ContinueButtonHome
+                                            title={"Continue..."}
+                                            onpress={() => addedItems(selectedFoodObject, selectedIndex)}
+                                        />
                                     </View>
                                 </View>
                             </Modal>
@@ -275,10 +278,10 @@ const Home = ({ navigation }) => {
             }
             {
                 selectedOrder.length === 0 ? null :
-                <ContinueButtonHome
-                    title={`Proceed to cart : ${numberOfItems}`}
-                    onpress={()=>convertData(selectedOrder)}
-                />
+                    <ContinueButtonHome
+                        title={`Proceed to cart : ${numberOfItems}`}
+                        onpress={() => convertData(selectedOrder)}
+                    />
 
             }
         </View>

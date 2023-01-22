@@ -25,8 +25,8 @@ const Bottomtab = () => {
           zIndex: 1,
           borderRadius: 5,
           // borderWidth: 1,
-          borderTopWidth: 1,
-          borderTopColor: "black"
+          // borderTopWidth: 0.,
+          // borderTopColor: "black"
           // shadowColor: '#28CDA9',
         },],
 
