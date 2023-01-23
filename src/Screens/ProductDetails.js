@@ -25,21 +25,39 @@ const ProductDetials = ({ route, navigation }) => {
         for (i = 0; i < finalArray.length; i++) {
             // console.log(finalArray[i])
             if (finalArray[i].isHalfSelected == false) {
-
-                IntegerAmount1 = parseInt(finalArray[i].addedQuantity)
-                console.log(IntegerAmount1, "I am quanitty");
-
-                IntegerAmount = parseInt(finalArray[i].fullprice)
-                console.log("IntAMourt", IntegerAmount)
-                TP = TP + (IntegerAmount * IntegerAmount1);
+                if (finalArray[i].addonsSelected == false) {
+                    IntegerAmount1 = parseInt(finalArray[i].addedQuantity)
+                    console.log(IntegerAmount1, "I am quanitty");
+                    // IntegerAmount2 = parseInt(finalArray[i].addonsPrice)
+                    IntegerAmount = parseInt(finalArray[i].fullprice)
+                    console.log("IntAMourt", IntegerAmount)
+                    TP = TP + (IntegerAmount * IntegerAmount1);
+                }
+                else {
+                    IntegerAmount1 = parseInt(finalArray[i].addedQuantity)
+                    console.log(IntegerAmount1, "I am quanitty");
+                    IntegerAmount2 = parseInt(finalArray[i].addonsPrice)
+                    IntegerAmount = parseInt(finalArray[i].fullprice)
+                    console.log("IntAMourt", IntegerAmount)
+                    TP = TP + (IntegerAmount * IntegerAmount1 + IntegerAmount2);
+                }
             }
             else {
-                IntegerAmount1 = parseInt(finalArray[i].addedQuantity)
-                console.log(IntegerAmount1, "I am quanitty");
-
-                IntegerAmount = parseInt(finalArray[i].halfPrice)
-                console.log("IntAMourt", IntegerAmount)
-                TP = TP + (IntegerAmount * IntegerAmount1);
+                if (finalArray[i].addonsSelected == false) {
+                    IntegerAmount1 = parseInt(finalArray[i].addedQuantity)
+                    console.log(IntegerAmount1, "I am quanitty");
+                    IntegerAmount = parseInt(finalArray[i].halfPrice)
+                    console.log("IntAMourt", IntegerAmount)
+                    TP = TP + (IntegerAmount * IntegerAmount1);
+                }
+                else {
+                    IntegerAmount1 = parseInt(finalArray[i].addedQuantity)
+                    IntegerAmount2 = parseInt(finalArray[i].addonsPrice)
+                    console.log(IntegerAmount1, "I am quanitty");
+                    IntegerAmount = parseInt(finalArray[i].halfPrice)
+                    console.log("IntAMourt", IntegerAmount)
+                    TP = TP + (IntegerAmount * IntegerAmount1 + IntegerAmount2);
+                }
             }
         }
         const lastAmount = TP
@@ -51,26 +69,50 @@ const ProductDetials = ({ route, navigation }) => {
             return;
         }
         const newArr = finalArray.filter((obj) => obj.id !== id);
-        // console.log("i am hello", newArr)
+        console.log("i am hello", newArr)
         setfinalArray(newArr)
+        // finalArray.push(newArr)
+        console.log(newArr, "i am the removed one ")
         for (i = 0; i < newArr.length; i++) {
-            console.log("i am newArr", newArr)
+            // console.log(newArr[i])
             if (newArr[i].isHalfSelected == false) {
-
-                IntegerAmount = parseInt(newArr[i].fullprice)
-                console.log("i AM FULL PRICE", IntegerAmount)
-                console.log("IntAMourt", IntegerAmount)
-                TP = TP + IntegerAmount
+                if (newArr[i].addonsSelected == false) {
+                    IntegerAmount1 = parseInt(newArr[i].addedQuantity)
+                    console.log(IntegerAmount1, "I am quanitty");
+                    // IntegerAmount2 = parseInt(newArr[i].addonsPrice)
+                    IntegerAmount = parseInt(newArr[i].fullprice)
+                    console.log("IntAMourt", IntegerAmount)
+                    TP = TP + (IntegerAmount * IntegerAmount1);
+                }
+                else {
+                    IntegerAmount1 = parseInt(newArr[i].addedQuantity)
+                    console.log(IntegerAmount1, "I am quanitty");
+                    IntegerAmount2 = parseInt(newArr[i].addonsPrice)
+                    IntegerAmount = parseInt(newArr[i].fullprice)
+                    console.log("IntAMourt", IntegerAmount)
+                    TP = TP + (IntegerAmount * IntegerAmount1 + IntegerAmount2);
+                }
             }
             else {
-                IntegerAmount = parseInt(newArr[i].halfPrice)
-                // console.log("IntAMourt", IntegerAmount)
-                console.log("i AM HALF PRICE", IntegerAmount)
-                TP = TP + IntegerAmount
+                if (newArr[i].addonsSelected == false) {
+                    IntegerAmount1 = parseInt(newArr[i].addedQuantity)
+                    console.log(IntegerAmount1, "I am quanitty");
+                    IntegerAmount = parseInt(newArr[i].halfPrice)
+                    console.log("IntAMourt", IntegerAmount)
+                    TP = TP + (IntegerAmount * IntegerAmount1);
+                }
+                else {
+                    IntegerAmount1 = parseInt(newArr[i].addedQuantity)
+                    IntegerAmount2 = parseInt(newArr[i].addonsPrice)
+                    console.log(IntegerAmount1, "I am quanitty");
+                    IntegerAmount = parseInt(newArr[i].halfPrice)
+                    console.log("IntAMourt", IntegerAmount)
+                    TP = TP + (IntegerAmount * IntegerAmount1 + IntegerAmount2);
+                }
             }
         }
-        console.log("i am the tp", TP);
         const lastAmount = TP
+        console.log("I am the last amount", lastAmount)
         setTotalPriceFinal(lastAmount)
     }
     return (
@@ -86,6 +128,11 @@ const ProductDetials = ({ route, navigation }) => {
                                 <Image source={{ uri: item.image }} style={styles.ProImage} />
                                 <View style={styles.ProductDescPrice}>
                                     <Text style={styles.DescText}>{item.name}-{item.addedQuantity}</Text>
+                                    {
+                                        item.addonsSelected == true ?
+                                            <Text style={styles.PriceText}>Addons : {item.addonsName}</Text> : null
+                                    }
+
                                     <Text style={styles.PriceText}>Price : {item.isHalfSelected == false ? item.fullprice : item.halfPrice}</Text>
                                 </View>
                                 <View style={styles.QuantityView}>
