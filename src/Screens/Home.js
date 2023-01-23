@@ -183,7 +183,8 @@ const Home = ({ navigation }) => {
                 addedQuantity:items.addedQuantity,
                 addonsSelected:items.setAddon,
                 addonsName:items.nameAddon,
-                addonsPrice:items.priceAddon
+                addonsPrice:items.priceAddon,
+                foodImage:items.foodImg
             })
         })
         setIsEnabled(false)
