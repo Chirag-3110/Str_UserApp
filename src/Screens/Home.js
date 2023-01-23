@@ -19,6 +19,7 @@ import FoodCard from '../components/FoodCard';
 import HomeHeader from '../components/HomeHeader';
 import ContinueButtonHome from '../components/ContinueButtonHome';
 import styles from '../styles/HomeStyle';
+import Lottie from 'lottie-react-native';
 const { width, height } = Dimensions.get('window');
 
 
@@ -186,6 +187,7 @@ const Home = ({ navigation }) => {
             })
         })
         setIsEnabled(false)
+        // console.log(newItemArray);
         navigation.navigate("ProductDetials", { selectedOrderArray: newItemArray });
     }
     return (
@@ -199,7 +201,9 @@ const Home = ({ navigation }) => {
                 All Orders
             </Text>
             {
-                searchedArray.length === 0 ? null :
+                searchedArray.length === 0 ? <View style={{ width: width, height: height, justifyContent: "center", alignItems: "center", backgroundColor: "white" }}>
+                    <Lottie source={require('../lottieFiles/59301-burger-loader.json')} autoPlay loop style={{ width: width, height: 400, }} />
+                </View> :
                     <FlatList
                         numColumns={2}
                         data={searchedArray}
