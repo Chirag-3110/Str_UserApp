@@ -2,8 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import {
     View,
     Text,
-    ScrollView,
-    StyleSheet,
+    Switch,
     TextInput,
     Dimensions,
     Image,
@@ -35,6 +34,15 @@ const Home = ({ navigation }) => {
     const [selectedIndex,setSelectedIndex]=useState('')
     const [selectedQuatntitType,setSelectedQuantityType]=useState('full')
     const isFocused = useIsFocused()
+    const [isEnabled, setIsEnabled] = useState(false);
+    const handleAddons = () => {
+        setSearchedArray((item) => {
+            item[selectedIndex].setAddon = !item[selectedIndex].setAddon;
+            return item
+        })
+        setIsEnabled(previousState => !previousState)
+    }
+
     const searchData = (searchItem) => {
         setSearch(searchItem);
         if (search != "") {
@@ -128,9 +136,12 @@ const Home = ({ navigation }) => {
 
     useEffect(() => {
         getAllFoodItems()
+        setSelectedFoodObject('')
+        setSelectedIndex('');
+        setSelectedQuantityType('full')
         setSelectedOrder([]);
         updateFCMToken();
-    }, [isFocused])
+    }, [])
     const updateFCMToken=async()=>{
         let FCMToken=await messaging().getToken();
         firestore().collection('Users').doc(userId.uid).update({
@@ -151,7 +162,7 @@ const Home = ({ navigation }) => {
     const modifyItemsArray = (items) => {
         let newModifiedArray = []
         items.forEach((item) => {
-            newModifiedArray.push({ ...item, isSelect: false, addedQuantity: 0 ,showIsHalf:false})
+            newModifiedArray.push({ ...item, isSelect: false, addedQuantity: 0 ,showIsHalf:false,setAddon:false})
         })
         setNumberOfItems(null)
         setOriginalArray(newModifiedArray);
@@ -168,9 +179,13 @@ const Home = ({ navigation }) => {
                 halfPrice:items.halfPrice,
                 fullprice:items.fullPrice,
                 fullQuantity:items.fullQuant,
-                addedQuantity:items.addedQuantity
+                addedQuantity:items.addedQuantity,
+                addonsSelected:items.setAddon,
+                addonsName:items.nameAddon,
+                addonsPrice:items.priceAddon
             })
         })
+        setIsEnabled(false)
         navigation.navigate("ProductDetials", { selectedOrderArray: newItemArray });
     }
     return (
@@ -192,8 +207,8 @@ const Home = ({ navigation }) => {
                             <FoodCard 
                                 foodItem={item}
                                 itemIndex={index}
-                                setAddedListen={handleHalfFull}
-                                setNumberOfAddings={addedItems}
+                                setAddedListen={addedItems}
+                                setNumberOfAddings={handleHalfFull}
                                 setRemoveListner={handleAmountOfDishes}
                             />
                         )}
@@ -263,6 +278,32 @@ const Home = ({ navigation }) => {
                                             </Text>
                                         </TouchableOpacity>
                                     </View>
+                                    {
+                                        selectedFoodObject.isAddon?
+                                        <View style={{flexDirection: 'column',width:'100%'}}>
+                                            <View style={{flexDirection: 'row',justifyContent: 'space-between',alignItems: 'center',padding:10}}>
+                                                <Switch
+                                                    trackColor={{false: '#767577', true: '#81b0ff'}}
+                                                    thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
+                                                    ios_backgroundColor="#3e3e3e"
+                                                    onValueChange={handleAddons}
+                                                    value={isEnabled}
+                                                />
+                                                    <Text style={{color:"black",fontWeight:'700'}}>
+                                                        {isEnabled?"Addons Added":"Addons"}
+                                                    </Text>
+                                            </View>
+                                            <View style={{flexDirection: 'row',justifyContent: 'space-between',alignItems: 'center',paddingHorizontal:30,paddingVertical:10}}>
+                                                <Text style={{color:"black",fontWeight:'700'}}>
+                                                        {selectedFoodObject.nameAddon} 
+                                                    </Text>
+                                                    <Text style={{color:"black",fontWeight:'700'}}>
+                                                        {selectedFoodObject.priceAddon} Rs
+                                                    </Text>
+                                            </View>
+                                        </View>
+                                        :null
+                                        }
                                     <ContinueButtonHome
                                         title={"Continue..."}
                                         onpress={()=>addedItems(selectedFoodObject, selectedIndex)}

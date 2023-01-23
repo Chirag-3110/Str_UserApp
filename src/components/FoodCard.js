@@ -16,8 +16,8 @@ const FoodCard=(props)=>{
         props.setAddedListen(item,props.itemIndex);
     }
 
-    const setSelectedForPuls=(item)=>{
-        props.setNumberOfAddings(item,props.itemIndex);
+    const setSelectedForPuls=(item,index)=>{
+        props.setNumberOfAddings(item,index);
     }
 
     
@@ -50,13 +50,13 @@ const FoodCard=(props)=>{
                     </TouchableOpacity>
                     <Text style={styles.smallButtons}>{item.addedQuantity}</Text>
                     <TouchableOpacity style={styles.smallButtonBody} 
-                        onPress={() => setSelectedForPuls(item)
+                        onPress={() => setSelected(item)
                     }>
                         <Text style={styles.smallButtons}>+</Text>
                     </TouchableOpacity>
                 </View> :
                 <TouchableOpacity style={styles.buttonBody}
-                    onPress={() => setSelected(item)}
+                    onPress={() => setSelectedForPuls(item,props.itemIndex)}
                 >
                     <Text style={{ fontSize: 15, fontWeight: "700", color: "#28CDA9" }}>Add</Text>
                 </TouchableOpacity>

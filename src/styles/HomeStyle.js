@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
         width: width,
         padding:5,
         backgroundColor:"white",
-        height:height/2.5,
+        padding: 20,
         borderTopLeftRadius:10,
         borderTopRightRadius:10
     },
@@ -51,9 +51,8 @@ const styles = StyleSheet.create({
         borderRadius:35/2,
         alignItems: 'center',
         justifyContent: 'center',
-        position:"absolute",
-        top:15,
-        right: 15,
+        alignSelf:"flex-end",
+        margin:5
     }
 })
 export default styles;
