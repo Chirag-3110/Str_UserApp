@@ -125,7 +125,7 @@ const ProductDetials = ({ route, navigation }) => {
                     finalArray.map((item, index) => (
                         <>
                             <View key={item.id} style={styles.ProInfoBox}>
-                                <Image source={{ uri: item.image }} style={styles.ProImage} />
+                                <Image source={{ uri: item.foodImage }} style={styles.ProImage} />
                                 <View style={styles.ProductDescPrice}>
                                     <Text style={styles.DescText}>{item.name}-{item.addedQuantity}</Text>
                                     {

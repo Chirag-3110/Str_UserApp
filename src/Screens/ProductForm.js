@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import {
     View,
-    Text, StyleSheet, TextInput, TouchableOpacity, ActivityIndicator, ScrollView
+    Text, StyleSheet, TextInput, TouchableOpacity, ActivityIndicator, ScrollView, Dimensions
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+const windoWidth = Dimensions.get('window').width;
+const windoHeight = Dimensions.get('window').height;
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import firestore from '@react-native-firebase/firestore';
@@ -19,6 +21,7 @@ const ProductForm = ({ navigation, route }) => {
     const [allUsersToken, setAllUsersToken] = useState([])
     useEffect(() => {
         setUsersSelectedOreders(finalProducts)
+        console.log(userSelectedOrders)
         getFcmToken()
         getAllUsers()
     }, [])
@@ -45,18 +48,18 @@ const ProductForm = ({ navigation, route }) => {
                 notificationBody: "New Order is recieved"
             })
         })
-        .then((res) => res.json())
-        .then((data) => {
-            console.log(data);
-            navigation.navigate("OrderConfirm")
-            setLoading(false)
-        })
-        .catch((e) => {
-            console.log(e);
-        })
+            .then((res) => res.json())
+            .then((data) => {
+                console.log(data);
+                navigation.navigate("OrderConfirm")
+                setLoading(false)
+            })
+            .catch((e) => {
+                console.log(e);
+            })
     }
     const getFcmToken = async () => {
-        let FCMToken=await messaging().getToken();
+        let FCMToken = await messaging().getToken();
         setfcmToken(FCMToken)
     }
     const checkForDetails = () => {
@@ -95,16 +98,16 @@ const ProductForm = ({ navigation, route }) => {
             },
             body: JSON.stringify(orderData)
         })
-        .then((res) => res.json())
-        .then((response) => {
-            console.log('res',response)
-            notificationHandler();
+            .then((res) => res.json())
+            .then((response) => {
+                console.log('res', response)
+                notificationHandler();
 
-        })
-        .catch((e) => {
-            console.log(e);
-            setLoading(false)
-        })
+            })
+            .catch((e) => {
+                console.log(e);
+                setLoading(false)
+            })
     }
     return (
         <ScrollView style={styles.body}>
@@ -115,7 +118,7 @@ const ProductForm = ({ navigation, route }) => {
                     <Text style={styles.label}>Name</Text>
                     <View style={styles.container}>
                         <Ionicons name='person' color={'#28CDA9'} size={22} />
-                        <TextInput style={{ marginLeft: 7, color: "black" }} placeholderTextColor="black" placeholder='Name'
+                        <TextInput style={{ marginLeft: 7, color: "black", width: windoWidth / 1.5 }} placeholderTextColor="black" placeholder='Name'
                             onChangeText={name => setName(name)}
                         />
                     </View>
@@ -125,7 +128,7 @@ const ProductForm = ({ navigation, route }) => {
                     <Text style={styles.label}>Phone Number</Text>
                     <View style={styles.container}>
                         <MaterialCommunityIcons name='phone' color={'#28CDA9'} size={22} />
-                        <TextInput style={{ marginLeft: 7, color: "black" }} placeholderTextColor="black" placeholder='Phone Number'
+                        <TextInput style={{ marginLeft: 7, color: "black", width: windoWidth / 1.5 }} placeholderTextColor="black" placeholder='Phone Number'
                             onChangeText={phone => setPhone(phone)}
                             keyboardType={"number-pad"}
                         />
