@@ -67,6 +67,9 @@ const Home = ({ navigation }) => {
             setSelectedFoodObject(item)
             setSelectedIndex(index)
         }
+        else{
+            addedItems(item,index);
+        }
     }
     const manageHalyFullPlates = (quantityString) => {
         if (quantityString === 'half') {
