@@ -141,13 +141,20 @@ const Home = ({ navigation }) => {
 
 
     useEffect(() => {
-        getAllFoodItems()
-        setSelectedFoodObject('')
-        setSelectedIndex('');
-        setSelectedQuantityType('full')
-        setSelectedOrder([]);
-        updateFCMToken();
-    }, [])
+            setSelectedQuantityType('full')
+            setSelectedOrder([]);
+            getAllFoodItems()
+            updateFCMToken();
+        if(!isFocused){
+            setSelectedFoodObject('')
+            setSelectedIndex('');
+            setNumberOfItems(null);
+            setSearchedArray([])
+            setOriginalArray([]);
+            setSelectedOrder([])
+            console.log(isFocused);
+        }
+    }, [isFocused])
     const updateFCMToken = async () => {
         let FCMToken = await messaging().getToken();
         firestore().collection('Users').doc(userId.uid).update({
@@ -156,14 +163,7 @@ const Home = ({ navigation }) => {
     }
 
     const getAllFoodItems = () => {
-        // fetch("https://ordermanagementserver-production.up.railway.app/getfood")
-        // .then((res)=>res.json())
-        // .then((data)=>{
         modifyItemsArray(items)
-        // })
-        // .catch((e)=>{
-        //     console.log(e);
-        // })
     }
     const modifyItemsArray = (items) => {
         let newModifiedArray = []
