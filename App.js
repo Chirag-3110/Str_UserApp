@@ -16,9 +16,9 @@ import ForgotPass from './src/Screens/Auth/forgotPass';
 import auth from '@react-native-firebase/auth';
 
 const Stack = createNativeStackNavigator();
-export const GlobalVariable=createContext();
+export const GlobalVariable = createContext();
 function App() {
-
+  console.disableYellowBox = true;
   useEffect(() => {
     requestUserPermission()
     NotificationListner()
@@ -41,10 +41,10 @@ function App() {
     <>
       <GlobalVariable.Provider
         value={{
-          userId:user
+          userId: user
         }}
       >
-      <NavigationContainer>
+        <NavigationContainer>
           <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="login">
             {
               user == null ?

@@ -1,12 +1,13 @@
 import { useRoute } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Dimensions, TouchableOpacity, Image, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, TouchableOpacity, LogBox, Image, ScrollView } from 'react-native';
 const windoWidth = Dimensions.get('window').width;
 const windoHeight = Dimensions.get('window').height;
 const ProductDetials = ({ route, navigation }) => {
     const { selectedOrderArray } = route.params;
     const [finalArray, setfinalArray] = useState([])
     let TP = 0;
+    LogBox.ignoreAllLogs();
     let newArr = []
     useEffect(() => {
         console.log(selectedOrderArray);
