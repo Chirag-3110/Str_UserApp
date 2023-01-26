@@ -21,7 +21,7 @@ const ProductForm = ({ navigation, route }) => {
     const [allUsersToken, setAllUsersToken] = useState([])
     useEffect(() => {
         setUsersSelectedOreders(finalProducts)
-        console.log(userSelectedOrders)
+        console.log(finalProducts)
         getFcmToken()
         getAllUsers()
     }, [])

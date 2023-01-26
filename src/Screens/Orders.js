@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, FlatList, View, Dimensions, TouchableOpacity, RefreshControl } from 'react-native';
+import { SafeAreaView, ScrollView, StatusBar, LogBox, StyleSheet, Text, FlatList, View, Dimensions, TouchableOpacity, RefreshControl } from 'react-native';
 const windoWidth = Dimensions.get('window').width;
 const windoHeight = Dimensions.get('window').height;
 function Orders() {
   const [allOrderArray, setallOrderArray] = useState([]);
   const [refreshing, setRefreshing] = React.useState(false);
-
+  LogBox.ignoreAllLogs();
   useEffect(() => {
     data();
   }, []);

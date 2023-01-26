@@ -7,6 +7,7 @@ const ProductDetials = ({ route, navigation }) => {
     const { selectedOrderArray } = route.params;
     const [finalArray, setfinalArray] = useState([])
     let TP = 0;
+    let newArr = []
     useEffect(() => {
         console.log(selectedOrderArray);
         finalArray.push(...selectedOrderArray)
@@ -68,11 +69,11 @@ const ProductDetials = ({ route, navigation }) => {
             navigation.navigate("Home")
             return;
         }
-        const newArr = finalArray.filter((obj) => obj.id !== id);
+        let newArr = finalArray.filter((obj) => obj.id !== id);
         console.log("i am hello", newArr)
         setfinalArray(newArr)
-        // finalArray.push(newArr)
-        console.log(newArr, "i am the removed one ")
+        finalArray.push(...newArr)
+        console.log(finalArray, "i am the removed one ")
         for (i = 0; i < newArr.length; i++) {
             // console.log(newArr[i])
             if (newArr[i].isHalfSelected == false) {
