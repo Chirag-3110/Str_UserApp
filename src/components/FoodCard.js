@@ -1,16 +1,30 @@
-import React,{useState} from 'react';
+import React,{useEffect, useState} from 'react';
 import {
     View,
     Text,
     Dimensions,
     StyleSheet,
     TouchableOpacity,
-    Image
+    Image,
+    Modal,
+    Switch
 } from 'react-native';
-const {width,height}=Dimensions.get('window');
+import styles from '../styles/PriceCardStyles';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import ContinueButtonHome from './ContinueButtonHome';
+import PriceCard from './PriceCard';
+import AddonSelector from './AddonsSelector';
 
 const FoodCard=(props)=>{
     const [item,setItem]=useState(props.foodItem)
+    const [isEnabled, setIsEnabled] = useState(false);
+    const [showModal, setShowModal] = useState(false);
+    const [selectedQuatntitType, setSelectedQuantityType] = useState('full')
+
+    const handleAddons = () => {
+        props.handleAddons(props.itemIndex)
+        setIsEnabled(previousState => !previousState)
+    }
 
     const setSelected=(item)=>{
         props.setAddedListen(item,props.itemIndex);
@@ -18,8 +32,18 @@ const FoodCard=(props)=>{
 
     const setSelectedForPuls=(item,index)=>{
         props.setNumberOfAddings(item,index);
+        setShowModal(false)
     }
-
+    const manageHalyFullPlates = (quantityString) => {
+        if (quantityString === 'half') {
+            setSelectedQuantityType('half');
+            props.showHalfFullModal(props.itemIndex,true)
+        }
+        else {
+            setSelectedQuantityType('full');
+            props.showHalfFullModal(props.itemIndex,false)
+        }
+    }
     
     return(
         <View style={styles.itemContainer} key={item._id}> 
@@ -56,50 +80,60 @@ const FoodCard=(props)=>{
                     </TouchableOpacity>
                 </View> :
                 <TouchableOpacity style={styles.buttonBody}
-                    onPress={() => setSelectedForPuls(item,props.itemIndex)}
+                    onPress={() => {
+                        if(item.isHalf){
+                            setShowModal(true)   
+                        }                
+                        else{
+                            setSelectedForPuls(item, props.itemIndex)
+                        }
+                    }}
                 >
                     <Text style={{ fontSize: 15, fontWeight: "700", color: "#28CDA9" }}>Add</Text>
                 </TouchableOpacity>
             }
+            <Modal visible={showModal} animationType='slide' transparent={true}>
+                <View style={styles.modeOuter}>
+                    <View style={styles.innnerModel}>
+                        <TouchableOpacity style={styles.modalCloseButton} onPress={() => {
+                            setShowModal(false)
+                        }}>
+                            <FontAwesome name='close' color={'#6BB5FF'} size={22} />
+                        </TouchableOpacity>
+                        <View style={{ flexDirection: 'row', justifyContent: "space-evenly", alignItems: 'center', width: '100%', marginVertical: 20 }}>
+                            <PriceCard
+                                onpress={() => manageHalyFullPlates("half")}
+                                selectedType={selectedQuatntitType}
+                                foodQtyType={'half'}
+                                foodObjPrice={item.halfPrice}
+                                foodObjQut={item.halfQaunt}
+                            />
+                            <Text style={{ color: "black", fontWeight: "bold" }}>Select Quantity</Text>
+                            <PriceCard
+                                onpress={() => manageHalyFullPlates("full")}
+                                selectedType={selectedQuatntitType}
+                                foodQtyType={'full'}
+                                foodObjPrice={item.fullPrice}
+                                foodObjQut={item.fullQuant}
+                            />
+                        </View>
+                        {
+                            item.isAddon ?
+                            <AddonSelector
+                                value={isEnabled}
+                                nameAddon={item.nameAddon}
+                                priceAddons={item.priceAddon}
+                                handleAddons={handleAddons}
+                            />:null
+                        }
+                        <ContinueButtonHome
+                            title={"Continue..."}
+                            onpress={() => setSelectedForPuls(item, props.itemIndex)}
+                        />
+                    </View>
+                </View>
+            </Modal>
         </View>
     )
 } 
-const styles=StyleSheet.create({
-    itemContainer: {
-        width: width / 2.3,
-        borderRadius: 10,
-        margin: 10,
-        alignSelf: "center",
-        alignItems: 'center',
-        padding: 10,
-        elevation: 5,
-        // paddingVertical: 20,
-        backgroundColor: "white",
-        marginTop: 10
-    },
-    smallButtons: {
-        color: "black",
-        fontWeight: "bold",
-        fontSize: 20,
-    },
-    smallButtonBody: {
-        backgroundColor: "white",
-        height: 25,
-        width: 25,
-        alignItems: "center",
-        justifyContent: 'center',
-        elevation: 5,
-        borderRadius: 2
-    },
-    buttonBody: {
-        width: '90%',
-        height: 35,
-        backgroundColor: "transparent",
-        borderWidth: 2,
-        alignItems: 'center',
-        justifyContent: "center",
-        borderRadius: 5,
-        borderColor: "#28CDA9"
-    },
-})
 export default FoodCard;

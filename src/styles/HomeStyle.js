@@ -24,35 +24,6 @@ const styles = StyleSheet.create({
         elevation:10,
         alignSelf:"flex-end"
     },
-    modeOuter: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor:"#000000aa"
-    },
-    innnerModel: {
-        backgroundColor: 'white',
-        position: 'absolute',
-        bottom:0,
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: width,
-        padding:5,
-        backgroundColor:"white",
-        padding: 20,
-        borderTopLeftRadius:10,
-        borderTopRightRadius:10
-    },
-    modalCloseButton:{
-        width:35,
-        height:35,
-        backgroundColor:"white",
-        elevation:10,
-        borderRadius:35/2,
-        alignItems: 'center',
-        justifyContent: 'center',
-        alignSelf:"flex-end",
-        margin:5
-    }
+    
 })
 export default styles;

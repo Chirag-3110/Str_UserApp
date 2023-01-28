@@ -32,18 +32,13 @@ const Home = ({ navigation }) => {
     const [search, setSearch] = useState("");
     const [selectedOrder, setSelectedOrder] = useState([]);
     let [numberOfItems, setNumberOfItems] = useState(null);
-    const [showModal, setShowModal] = useState(false);
-    const [selectedFoodObject, setSelectedFoodObject] = useState('');
-    const [selectedIndex, setSelectedIndex] = useState('')
-    const [selectedQuatntitType, setSelectedQuantityType] = useState('full')
     const isFocused = useIsFocused()
-    const [isEnabled, setIsEnabled] = useState(false);
-    const handleAddons = () => {
+    
+    const handleAddons = (index) => {
         setSearchedArray((item) => {
-            item[selectedIndex].setAddon = !item[selectedIndex].setAddon;
+            item[index].setAddon = !item[index].setAddon;
             return item
         })
-        setIsEnabled(previousState => !previousState)
     }
 
     const searchData = (searchItem) => {
@@ -60,32 +55,11 @@ const Home = ({ navigation }) => {
             setSearchedArray(originalArray);
         }
     };
-
-    const handleHalfFull = (item, index) => {
-        if (!item.isSelect && item.isHalf) {
-            setShowModal(true);
-            setSelectedFoodObject(item)
-            setSelectedIndex(index)
-        }
-        else{
-            addedItems(item,index);
-        }
-    }
-    const manageHalyFullPlates = (quantityString) => {
-        if (quantityString === 'half') {
-            setSelectedQuantityType('half');
-            setSearchedArray((item) => {
-                item[selectedIndex].showIsHalf = true;
-                return item
-            })
-        }
-        else {
-            setSelectedQuantityType('full');
-            setSearchedArray((item) => {
-                item[selectedIndex].showIsHalf = false;
-                return item
-            })
-        }
+    const getHalfFullVlaue=(index,halySelctor)=>{
+        setSearchedArray((item) => {
+            item[index].showIsHalf=halySelctor
+            return item
+        })
     }
     const addedItems = (item, index) => {
         setSearchedArray((item) => {
@@ -108,7 +82,6 @@ const Home = ({ navigation }) => {
         }
         numberOfItems++;
         setNumberOfItems(numberOfItems);
-        setShowModal(false)
     }
     const handleAmountOfDishes = (item, index) => {
         if (item.addedQuantity > 1) {
@@ -141,18 +114,14 @@ const Home = ({ navigation }) => {
 
 
     useEffect(() => {
-            setSelectedQuantityType('full')
             setSelectedOrder([]);
             getAllFoodItems()
             updateFCMToken();
         if(!isFocused){
-            setSelectedFoodObject('')
-            setSelectedIndex('');
             setNumberOfItems(null);
             setSearchedArray([])
             setOriginalArray([]);
             setSelectedOrder([])
-            console.log(isFocused);
         }
     }, [isFocused])
     const updateFCMToken = async () => {
@@ -192,8 +161,6 @@ const Home = ({ navigation }) => {
                 foodImage: items.foodImg
             })
         })
-        setIsEnabled(false)
-        // console.log(newItemArray);
         navigation.navigate("ProductDetials", { selectedOrderArray: newItemArray });
     }
     return (
@@ -218,110 +185,13 @@ const Home = ({ navigation }) => {
                                 foodItem={item}
                                 itemIndex={index}
                                 setAddedListen={addedItems}
-                                setNumberOfAddings={handleHalfFull}
+                                setNumberOfAddings={addedItems}
                                 setRemoveListner={handleAmountOfDishes}
+                                showHalfFullModal={getHalfFullVlaue}
+                                handleAddons={handleAddons}
                             />
                         )}
                         keyExtractor={item => item._id}
-                        ListFooterComponent={
-                            <Modal visible={showModal} animationType='slide' transparent={true}>
-                                <View style={styles.modeOuter}>
-                                    <View style={styles.innnerModel}>
-                                        <TouchableOpacity style={styles.modalCloseButton} onPress={() => {
-                                            manageHalyFullPlates('full')
-                                            setShowModal(false)
-                                        }}>
-                                            <FontAwesome name='close' color={'#6BB5FF'} size={22} />
-                                        </TouchableOpacity>
-                                        <View style={{ flexDirection: 'row', justifyContent: "space-evenly", alignItems: 'center', width: '100%', marginVertical: 20 }}>
-                                            <TouchableOpacity
-                                                onPress={() => manageHalyFullPlates("half")}
-                                                style={[
-                                                    { elevation: 10, padding: 15, borderRadius: 10 },
-                                                    selectedQuatntitType === 'half' ? { backgroundColor: '#28CDA9' } : { backgroundColor: 'white' }
-                                                ]}
-                                            >
-                                                <Text style={[
-                                                    { fontWeight: "bold", fontSize: 25 },
-                                                    selectedQuatntitType === 'half' ? { color: 'white' } : { color: "black" }
-                                                ]}>
-                                                    Half
-                                                </Text>
-                                                <Text style={[
-                                                    { fontWeight: "bold", fontSize: 15 },
-                                                    selectedQuatntitType === 'half' ? { color: 'white' } : { color: "black" }
-                                                ]}>
-                                                    {selectedFoodObject.halfPrice} Rs
-                                                </Text>
-                                                <Text style={[
-                                                    { fontWeight: "bold", fontSize: 15 },
-                                                    selectedQuatntitType === 'half' ? { color: 'white' } : { color: "black" }
-                                                ]}>
-                                                    {selectedFoodObject.halfQaunt}
-                                                </Text>
-                                            </TouchableOpacity>
-                                            <Text style={{ color: "black", fontWeight: "bold" }}>Select Quantity</Text>
-                                            <TouchableOpacity
-                                                onPress={() => manageHalyFullPlates("full")}
-                                                style={[
-                                                    { elevation: 10, padding: 15, borderRadius: 10 },
-                                                    selectedQuatntitType === 'full' ? { backgroundColor: '#28CDA9' } : { backgroundColor: "white" }
-                                                ]}
-                                            >
-                                                <Text style={[
-                                                    { fontWeight: "bold", fontSize: 25 },
-                                                    selectedQuatntitType === 'full' ? { color: 'white' } : { color: 'black' }
-                                                ]}>
-                                                    Full
-                                                </Text>
-                                                <Text style={[
-                                                    { fontWeight: "bold", fontSize: 15 },
-                                                    selectedQuatntitType === 'full' ? { color: 'white' } : { color: 'black' }
-                                                ]}>
-                                                    {selectedFoodObject.fullPrice} Rs
-                                                </Text>
-                                                <Text style={[
-                                                    { fontWeight: "bold", fontSize: 15 },
-                                                    selectedQuatntitType === 'full' ? { color: 'white' } : { color: 'black' }
-                                                ]}>
-                                                    {selectedFoodObject.fullQuant}
-                                                </Text>
-                                            </TouchableOpacity>
-                                        </View>
-                                        {
-                                            selectedFoodObject.isAddon ?
-                                                <View style={{ flexDirection: 'column', width: '100%' }}>
-                                                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 10 }}>
-                                                        <Switch
-                                                            trackColor={{ false: '#767577', true: '#81b0ff' }}
-                                                            thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
-                                                            ios_backgroundColor="#3e3e3e"
-                                                            onValueChange={handleAddons}
-                                                            value={isEnabled}
-                                                        />
-                                                        <Text style={{ color: "black", fontWeight: '700' }}>
-                                                            {isEnabled ? "Addons Added" : "Addons"}
-                                                        </Text>
-                                                    </View>
-                                                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 30, paddingVertical: 10 }}>
-                                                        <Text style={{ color: "black", fontWeight: '700' }}>
-                                                            {selectedFoodObject.nameAddon}
-                                                        </Text>
-                                                        <Text style={{ color: "black", fontWeight: '700' }}>
-                                                            {selectedFoodObject.priceAddon} Rs
-                                                        </Text>
-                                                    </View>
-                                                </View>
-                                                : null
-                                        }
-                                        <ContinueButtonHome
-                                            title={"Continue..."}
-                                            onpress={() => addedItems(selectedFoodObject, selectedIndex)}
-                                        />
-                                    </View>
-                                </View>
-                            </Modal>
-                        }
                     />
             }
             {
